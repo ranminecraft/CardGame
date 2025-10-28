@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Player {
-    String name;
+    String playerName;
     int id;
 
     public Player(int id) {

@@ -1,0 +1,36 @@
+.play-button {
+    -fx-background-image: url("button1.png");
+    -fx-alignment: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-opacity: 0.9;
+    -fx-background-color: transparent;
+    -fx-pref-width: 120px;
+    -fx-pref-height: 120px;
+    -fx-font-size: 22px;
+}
+.play-button:hover {
+    -fx-opacity: 1;
+}
+.play-button:pressed {
+    -fx-background-image: url("button2.png");
+    -fx-opacity: 1;
+}
+.mode-button {
+    -fx-opacity: 0.9;
+    -fx-background-image: url("button3.png");
+    -fx-alignment: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-color: transparent;
+    -fx-pref-width: 97px;
+    -fx-pref-height: 38px;
+    -fx-font-size: 16px;
+}
+.mode-button:hover {
+    -fx-opacity: 1;
+}
+.mode-button:pressed {
+    -fx-background-image: url("button4.png");
+    -fx-opacity: 1;
+}

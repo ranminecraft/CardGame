@@ -12,6 +12,7 @@ import java.util.Map;
 import static cc.ranmc.game.card.common.constant.BundleKey.ID;
 import static cc.ranmc.game.card.common.constant.BundleKey.MOVE;
 import static cc.ranmc.game.card.common.constant.BundleKey.PLAYERS;
+import static cc.ranmc.game.card.common.constant.BundleKey.PLAYER_NAME;
 
 public class Main {
 
@@ -29,17 +30,14 @@ public class Main {
             Bundle bundle = new Bundle(ID);
             bundle.put(ID, id);
             connection.send(bundle);
-            updatePlayerList();
             System.out.println("客户端连接 " + connection + " id" + id);
 
             connection.addMessageHandler((conn, message) -> {
-                if (message.getName().equals(MOVE)) {
-                    message.put(ID, playerMap.get(connection.toString()).getId());
-                    server.broadcast(message);
-                }
+                handleMessage(conn.toString(), message);
             });
         });
         server.setOnDisconnected(connection -> {
+            System.out.println("客户端断开 " + connection + " id" + playerMap.get(connection.toString()).getId());
             playerMap.remove(connection.toString());
             updatePlayerList();
         });
@@ -51,6 +49,16 @@ public class Main {
             } catch (InterruptedException e) {
                 break;
             }
+        }
+    }
+
+    private static void handleMessage(String connectionKey,Bundle message) {
+        if (message.getName().equals(MOVE)) {
+            message.put(ID, playerMap.get(connectionKey).getId());
+            server.broadcast(message);
+        } else if (message.getName().equals(PLAYER_NAME)) {
+            playerMap.get(connectionKey).setPlayerName(message.get(PLAYER_NAME));
+            updatePlayerList();
         }
     }
 
