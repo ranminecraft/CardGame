@@ -70,7 +70,11 @@ public class MainMenuScene extends Scene {
                     Main.playerName = answer;
                     help2Text.setText("来玩吧，" + answer + "！");
                     FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
-                    getDialogService().showMessageBox("修改名称成功");
+                    if (answer.equals("阿然")) {
+                        getDialogService().showMessageBox("哼？另一个阿然！");
+                    } else {
+                        getDialogService().showMessageBox("修改名称成功");
+                    }
                 }
             });
         });

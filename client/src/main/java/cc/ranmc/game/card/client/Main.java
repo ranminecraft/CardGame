@@ -25,7 +25,7 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.getSaveLoadService;
 
 public class Main extends GameApplication {
 
-    private static Scene scene = new MainMenuScene();
+    private static Scene scene = new PreLoadingScene();
     public static String playerName = "经典";
 
     @Override
