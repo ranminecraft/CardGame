@@ -32,9 +32,8 @@ public class Main {
             connection.send(bundle);
             System.out.println("客户端连接 " + connection + " id" + id);
 
-            connection.addMessageHandler((conn, message) -> {
-                handleMessage(conn.toString(), message);
-            });
+            connection.addMessageHandler((_, message) ->
+                    handleMessage(connection.toString(), message));
         });
         server.setOnDisconnected(connection -> {
             System.out.println("客户端断开 " + connection + " id" + playerMap.get(connection.toString()).getId());

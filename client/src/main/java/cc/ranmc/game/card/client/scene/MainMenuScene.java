@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.io.FileNotFoundException;
+import java.util.regex.Pattern;
 
 import static cc.ranmc.game.card.common.constant.GameInfo.SAVE_FILE_NAME;
 import static cc.ranmc.game.card.common.constant.GameInfo.VERSION;
@@ -61,9 +62,16 @@ public class MainMenuScene extends Scene {
         FXGL.getGameScene().addUINode(nameBtn);
         nameBtn.setOnAction(_ -> {
             getDialogService().showInputBox("输入您的游戏名称", answer -> {
-                Main.playerName = answer;
-                help2Text.setText("来玩吧，" + answer + "！");
-                FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
+                if (answer == null ||
+                        !Pattern.compile("^[a-zA-Z一-龥0-9-_.()（）~]{1,6}$")
+                                .matcher(answer).matches()) {
+                    getDialogService().showMessageBox("名称过长或不规范");
+                } else {
+                    Main.playerName = answer;
+                    help2Text.setText("来玩吧，" + answer + "！");
+                    FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
+                    getDialogService().showMessageBox("修改名称成功");
+                }
             });
         });
 

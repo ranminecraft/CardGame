@@ -1,5 +1,7 @@
 package cc.ranmc.game.card.client;
 
+import cc.ranmc.game.card.client.scene.GameScene;
+import cc.ranmc.game.card.client.scene.MainMenuScene;
 import cc.ranmc.game.card.client.scene.PreLoadingScene;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
@@ -23,8 +25,8 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.getSaveLoadService;
 
 public class Main extends GameApplication {
 
-    private static Scene scene = new PreLoadingScene();
-    public static String playerName = "Player";
+    private static Scene scene = new MainMenuScene();
+    public static String playerName = "经典";
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -58,6 +60,11 @@ public class Main extends GameApplication {
                 playerName = bundle.get(PLAYER_NAME);
             }
         });
+    }
+
+    @Override
+    protected void onUpdate(double tpf) {
+        scene.update(tpf);
     }
 
     @Override
