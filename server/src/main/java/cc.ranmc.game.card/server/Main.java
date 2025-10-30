@@ -54,18 +54,18 @@ public class Main {
             Bundle bundle = new Bundle(ID);
             bundle.put(ID, id);
             connection.send(bundle);
-            System.out.println("客户端连接 " + connection + " id" + id);
+            getLogger().info("客户端连接{} id{}", connection, id);
 
             connection.addMessageHandler((_, message) ->
                     handleMessage(connection.toString(), message));
         });
         server.setOnDisconnected(connection -> {
-            System.out.println("客户端断开 " + connection + " id" + playerMap.get(connection.toString()).getId());
+            getLogger().info("客户端断开{} id{}", connection, playerMap.get(connection.toString()).getId());
             playerMap.remove(connection.toString());
             updatePlayerList();
         });
         server.startAsync();
-        System.out.println("已成功运行在端口 " + PORT);
+        getLogger().info("已成功运行在端口 " + PORT);
         while (true) {
             try {
                 Thread.sleep(1000);
