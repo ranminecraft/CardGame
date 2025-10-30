@@ -37,7 +37,7 @@ public class PreLoadingScene extends Scene {
         fadeIn.play();
         FXGL.getGameScene().addUINode(logo);
 
-        /*Input input = FXGL.getGameScene().getInput();
+        Input input = FXGL.getGameScene().getInput();
         input.addAction(new UserAction("EscSkip") {
             @Override
             protected void onAction() {
@@ -55,7 +55,7 @@ public class PreLoadingScene extends Scene {
             protected void onAction() {
                 Main.changeScene(new MainMenuScene());
             }
-        }, KeyCode.ENTER);*/
+        }, KeyCode.ENTER);
 
         getGameTimer().runOnceAfter(() ->
                 Main.changeScene(new MainMenuScene()), Duration.millis(6000));

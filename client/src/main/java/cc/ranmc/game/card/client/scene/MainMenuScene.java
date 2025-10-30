@@ -9,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-import java.io.FileNotFoundException;
 import java.util.regex.Pattern;
 
 import static cc.ranmc.game.card.common.constant.GameInfo.SAVE_FILE_NAME;

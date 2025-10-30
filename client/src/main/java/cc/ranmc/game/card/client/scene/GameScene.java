@@ -11,9 +11,6 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.net.Client;
 import com.almasb.fxgl.net.Connection;
 import com.almasb.fxgl.scene.Scene;
-import com.almasb.fxgl.texture.Texture;
-import javafx.scene.Cursor;
-import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -33,13 +30,7 @@ import static cc.ranmc.game.card.common.constant.BundleKey.X;
 import static cc.ranmc.game.card.common.constant.BundleKey.Y;
 import static cc.ranmc.game.card.common.constant.GameInfo.ADDRESS;
 import static cc.ranmc.game.card.common.constant.GameInfo.PORT;
-import static cc.ranmc.game.card.common.constant.GameInfo.VERSION;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getDialogService;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getSaveLoadService;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getUIFactoryService;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getb;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.set;
 
 public class GameScene extends Scene {
 
@@ -58,8 +49,7 @@ public class GameScene extends Scene {
         helpText.setFont(Font.font(18));
         FXGL.addUINode(helpText, 10, 20);
 
-        Input input = FXGL.getInput();
-        input.clearAll();
+        Input input = FXGL.getGameScene().getInput();
         input.addAction(new UserAction("Move Up") {
             @Override
             protected void onAction() {

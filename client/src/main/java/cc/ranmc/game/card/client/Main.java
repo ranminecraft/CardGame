@@ -81,7 +81,7 @@ public class Main extends GameApplication {
         FXGL.getGameScene().clearUINodes();
         FXGL.getInput().clearAll();
         FXGL.getGameScene().getInput().clearAll();
-        getGameTimer().clear();
+        FXGL.getGameTimer().clear();
         scene = newScene;
         scene.onCreate();
     }
