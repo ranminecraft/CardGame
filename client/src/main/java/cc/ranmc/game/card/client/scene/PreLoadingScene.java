@@ -1,9 +1,8 @@
 package cc.ranmc.game.card.client.scene;
 
 import cc.ranmc.game.card.client.Main;
+import cc.ranmc.game.card.client.util.InputUtil;
 import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.input.Input;
-import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.scene.Scene;
 import com.almasb.fxgl.texture.Texture;
 import javafx.animation.FadeTransition;
@@ -37,25 +36,8 @@ public class PreLoadingScene extends Scene {
         fadeIn.play();
         FXGL.getGameScene().addUINode(logo);
 
-        Input input = FXGL.getGameScene().getInput();
-        input.addAction(new UserAction("EscSkip") {
-            @Override
-            protected void onAction() {
-                Main.changeScene(new MainMenuScene());
-            }
-        }, KeyCode.ESCAPE);
-        input.addAction(new UserAction("SpaceSkip") {
-            @Override
-            protected void onAction() {
-                Main.changeScene(new MainMenuScene());
-            }
-        }, KeyCode.SPACE);
-        input.addAction(new UserAction("EnterSkip") {
-            @Override
-            protected void onAction() {
-                Main.changeScene(new MainMenuScene());
-            }
-        }, KeyCode.ENTER);
+        Runnable runnable = ()-> Main.changeScene(new MainMenuScene());
+        InputUtil.add(runnable, KeyCode.ENTER, this.getClass().toString());
 
         getGameTimer().runOnceAfter(() ->
                 Main.changeScene(new MainMenuScene()), Duration.millis(6000));

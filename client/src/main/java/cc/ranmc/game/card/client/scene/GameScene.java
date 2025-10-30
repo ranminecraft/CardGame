@@ -1,13 +1,12 @@
 package cc.ranmc.game.card.client.scene;
 
 import cc.ranmc.game.card.client.Main;
+import cc.ranmc.game.card.client.util.InputUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.almasb.fxgl.core.serialization.Bundle;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.input.Input;
-import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.net.Client;
 import com.almasb.fxgl.net.Connection;
 import com.almasb.fxgl.scene.Scene;
@@ -49,60 +48,44 @@ public class GameScene extends Scene {
         helpText.setFont(Font.font(18));
         FXGL.addUINode(helpText, 10, 20);
 
-        Input input = FXGL.getGameScene().getInput();
-        input.addAction(new UserAction("Move Up") {
-            @Override
-            protected void onAction() {
-                if (!playerMap.containsKey(id)) return;
-                double newY = playerMap.get(id).getY() - MOVE_SPEED;
-                if (newY >= 0) {
-                    playerMap.get(id).setY(newY);
-                }
+        InputUtil.add(()-> {
+            if (!playerMap.containsKey(id)) return;
+            double newY = playerMap.get(id).getY() - MOVE_SPEED;
+            if (newY >= 0) {
+                playerMap.get(id).setY(newY);
             }
-        }, KeyCode.W);
+        }, KeyCode.W, this.getClass().toString());
 
-        input.addAction(new UserAction("Move Down") {
-            @Override
-            protected void onAction() {
-                if (!playerMap.containsKey(id)) return;
-                double newY = playerMap.get(id).getY() + MOVE_SPEED;
-                if (newY + PLAYER_SIZE <= FXGL.getAppHeight()) {
-                    playerMap.get(id).setY(newY);
-                }
+        InputUtil.add(()-> {
+            if (!playerMap.containsKey(id)) return;
+            double newY = playerMap.get(id).getY() + MOVE_SPEED;
+            if (newY + PLAYER_SIZE <= FXGL.getAppHeight()) {
+                playerMap.get(id).setY(newY);
             }
-        }, KeyCode.S);
+        }, KeyCode.S, this.getClass().toString());
 
-        input.addAction(new UserAction("Move Left") {
-            @Override
-            protected void onAction() {
-                if (!playerMap.containsKey(id)) return;
-                double newX = playerMap.get(id).getX() - MOVE_SPEED;
-                if (newX >= 0) {
-                    playerMap.get(id).setX(newX);
-                }
+        InputUtil.add(()-> {
+            if (!playerMap.containsKey(id)) return;
+            double newX = playerMap.get(id).getX() - MOVE_SPEED;
+            if (newX >= 0) {
+                playerMap.get(id).setX(newX);
             }
-        }, KeyCode.A);
+        }, KeyCode.A, this.getClass().toString());
 
-        input.addAction(new UserAction("Move Right") {
-            @Override
-            protected void onAction() {
-                if (!playerMap.containsKey(id)) return;
-                double newX = playerMap.get(id).getX() + MOVE_SPEED;
-                if (newX + PLAYER_SIZE <= FXGL.getAppWidth()) {
-                    playerMap.get(id).setX(newX);
-                }
+        InputUtil.add(()-> {
+            if (!playerMap.containsKey(id)) return;
+            double newX = playerMap.get(id).getX() + MOVE_SPEED;
+            if (newX + PLAYER_SIZE <= FXGL.getAppWidth()) {
+                playerMap.get(id).setX(newX);
             }
-        }, KeyCode.D);
+        }, KeyCode.D, this.getClass().toString());
 
-        input.addAction(new UserAction("Disconnect") {
-            @Override
-            protected void onAction() {
-                id = 0;
-                playerMap.clear();
-                client.disconnect();
-                Main.changeScene(new MainMenuScene());
-            }
-        }, KeyCode.ESCAPE);
+        InputUtil.add(()-> {
+            id = 0;
+            playerMap.clear();
+            client.disconnect();
+            Main.changeScene(new MainMenuScene());
+        }, KeyCode.ESCAPE, this.getClass().toString());
     }
 
     protected void updateData() {
@@ -131,9 +114,8 @@ public class GameScene extends Scene {
 
             FXGL.getGameTimer().runAtInterval(this::updateData, Duration.millis(50));
 
-            connection.addMessageHandlerFX((_, message) -> {
-                handleMessage(message);
-            });
+            connection.addMessageHandlerFX((_, message) ->
+                    handleMessage(message));
         });
         client.connectAsync();
     }
