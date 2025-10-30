@@ -109,7 +109,7 @@ public class GameScene extends Scene {
             clientConnection = connection;
             helpText.setText("WSAD 移动  Esc 返回主菜单");
             Bundle bundle = new Bundle(PLAYER_NAME);
-            bundle.put(PLAYER_NAME, Main.playerName);
+            bundle.put(PLAYER_NAME, Main.getPlayerName());
             clientConnection.send(bundle);
 
             FXGL.getGameTimer().runAtInterval(this::updateData, Duration.millis(50));

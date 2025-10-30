@@ -8,6 +8,8 @@ import com.almasb.fxgl.profile.DataFile;
 import com.almasb.fxgl.profile.SaveLoadHandler;
 import com.almasb.fxgl.core.serialization.Bundle;
 import com.almasb.fxgl.scene.Scene;
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import static cc.ranmc.game.card.common.constant.BundleKey.PLAYER_NAME;
@@ -22,8 +24,11 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.getSaveLoadService;
 
 public class Main extends GameApplication {
 
-    public static Scene scene = new PreLoadingScene();
-    public static String playerName = "无名氏";
+    @Getter
+    private static Scene scene = new PreLoadingScene();
+    @Getter
+    @Setter
+    private static String playerName = "无名氏";
 
     @Override
     protected void initSettings(GameSettings settings) {

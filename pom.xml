@@ -68,6 +68,34 @@
                 <version>Release</version>
             </dependency>
 
+            <dependency>
+                <groupId>io.github.biezhi</groupId>
+                <artifactId>oh-my-email</artifactId>
+                <version>0.0.4</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.xerial</groupId>
+                <artifactId>sqlite-jdbc</artifactId>
+                <version>3.50.3.0</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>1.5.19</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.5.19</version>
+                <scope>compile</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>

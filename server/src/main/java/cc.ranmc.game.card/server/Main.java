@@ -5,14 +5,23 @@ import com.almasb.fxgl.core.serialization.Bundle;
 import com.almasb.fxgl.net.Server;
 import com.alibaba.fastjson2.JSONArray;
 import com.almasb.fxgl.net.tcp.TCPServer;
+import io.github.biezhi.ome.OhMyEmail;
+import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import static cc.ranmc.game.card.common.constant.BundleKey.ID;
 import static cc.ranmc.game.card.common.constant.BundleKey.MOVE;
 import static cc.ranmc.game.card.common.constant.BundleKey.PLAYERS;
 import static cc.ranmc.game.card.common.constant.BundleKey.PLAYER_NAME;
+import static cc.ranmc.game.card.common.constant.GameInfo.NAME;
+import static cc.ranmc.game.card.common.constant.GameInfo.AUTHOR;
+import static cc.ranmc.game.card.common.constant.GameInfo.VERSION;
+import static io.github.biezhi.ome.OhMyEmail.defaultConfig;
 
 public class Main {
 
@@ -20,8 +29,23 @@ public class Main {
     private static Server<Bundle> server;
     private static final Map<String, Player> playerMap = new HashMap<>();
     private static int id = 0;
+    @Getter
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     static void main() {
+        System.out.println("-----------------------");
+        System.out.println(NAME + " By " + AUTHOR);
+        System.out.println("Version: " + VERSION);
+        System.out.println("-----------------------");
+
+        // 初始化邮件
+        Properties props = defaultConfig(false);
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.qcloudmail.com");
+        props.put("mail.smtp.port", "465");
+        OhMyEmail.config(props, "bot@ranmc.cc", "");
+
         server = new TCPServer<>(PORT, Bundle.class);
         server.setOnConnected(connection -> {
 
@@ -41,7 +65,7 @@ public class Main {
             updatePlayerList();
         });
         server.startAsync();
-        System.out.println("服务器已启动，监听端口 " + PORT);
+        System.out.println("已成功运行在端口 " + PORT);
         while (true) {
             try {
                 Thread.sleep(1000);

@@ -17,7 +17,7 @@ public class InputUtil {
             FXGL.getInput().addAction(new UserAction(keyCode.toString()) {
                 @Override
                 protected void onAction() {
-                    Runnable runnable = getRunnableMap(keyCode).get(Main.scene.getClass().toString());
+                    Runnable runnable = getRunnableMap(keyCode).get(Main.getScene().getClass().toString());
                     if (runnable != null) runnable.run();
                 }
             }, keyCode);

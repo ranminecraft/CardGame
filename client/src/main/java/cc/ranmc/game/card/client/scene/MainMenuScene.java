@@ -49,7 +49,7 @@ public class MainMenuScene extends Scene {
         helpText.setTranslateY(460);
         FXGL.getGameScene().addUINode(helpText);
 
-        Text help2Text = getUIFactoryService().newText("来玩吧，" + Main.playerName + "！", Color.WHITE, 30);
+        Text help2Text = getUIFactoryService().newText("来玩吧，" + Main.getPlayerName() + "！", Color.WHITE, 30);
         help2Text.setTranslateX(12);
         help2Text.setTranslateY(495);
         FXGL.getGameScene().addUINode(help2Text);
@@ -66,7 +66,7 @@ public class MainMenuScene extends Scene {
                                 .matcher(answer).matches()) {
                     getDialogService().showMessageBox("名称过长或不规范");
                 } else {
-                    Main.playerName = answer;
+                    Main.setPlayerName(answer);
                     help2Text.setText("来玩吧，" + answer + "！");
                     FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
                     if (answer.equals("阿然")) {
