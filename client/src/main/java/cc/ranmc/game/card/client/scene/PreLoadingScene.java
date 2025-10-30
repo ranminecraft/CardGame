@@ -38,6 +38,8 @@ public class PreLoadingScene extends Scene {
 
         Runnable runnable = ()-> Main.changeScene(new MainMenuScene());
         InputUtil.add(runnable, KeyCode.ENTER, this.getClass().toString());
+        InputUtil.add(runnable, KeyCode.SPACE, this.getClass().toString());
+        InputUtil.add(runnable, KeyCode.ESCAPE, this.getClass().toString());
 
         getGameTimer().runOnceAfter(() ->
                 Main.changeScene(new MainMenuScene()), Duration.millis(6000));
