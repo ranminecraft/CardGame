@@ -66,7 +66,6 @@
                 <groupId>cc.ranmc.game.card</groupId>
                 <artifactId>common</artifactId>
                 <version>Release</version>
-                <scope>compile</scope>
             </dependency>
 
         </dependencies>

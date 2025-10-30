@@ -18,6 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,8 +115,7 @@ public class GameScene extends Scene {
         }, KeyCode.ESCAPE);
     }
 
-    @Override
-    protected void onUpdate(double tpf) {
+    protected void updateData() {
         if (playerMap.containsKey(id) &&
                 clientConnection != null &&
                 clientConnection.isConnected()) {
@@ -138,6 +138,8 @@ public class GameScene extends Scene {
             Bundle bundle = new Bundle(PLAYER_NAME);
             bundle.put(PLAYER_NAME, Main.playerName);
             clientConnection.send(bundle);
+
+            FXGL.getGameTimer().runAtInterval(this::updateData, Duration.millis(50));
 
             connection.addMessageHandlerFX((_, message) -> {
                 handleMessage(message);

@@ -1,7 +1,5 @@
 package cc.ranmc.game.card.client;
 
-import cc.ranmc.game.card.client.scene.GameScene;
-import cc.ranmc.game.card.client.scene.MainMenuScene;
 import cc.ranmc.game.card.client.scene.PreLoadingScene;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
@@ -26,7 +24,7 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.getSaveLoadService;
 public class Main extends GameApplication {
 
     private static Scene scene = new PreLoadingScene();
-    public static String playerName = "经典";
+    public static String playerName = "无名氏";
 
     @Override
     protected void initSettings(GameSettings settings) {
