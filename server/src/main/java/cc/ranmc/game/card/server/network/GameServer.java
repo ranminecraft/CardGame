@@ -46,6 +46,12 @@ public class GameServer {
         if (message.getName().equals(BundleKey.MOVE)) {
             message.put(BundleKey.ID, playerMap.get(connection.toString()).getId());
             server.broadcast(message);
+        } else if (message.getName().equals(BundleKey.CHAT)) {
+            Player player = playerMap.get(connection.toString());
+            message.put(BundleKey.ID, player.getId());
+            Main.getLogger().info("id{} 玩家名{} 说 {}",
+                    player.getId(), player.getPlayerName(), message.get(BundleKey.CHAT));
+            server.broadcast(message);
         } else if (message.getName().equals(BundleKey.TOKEN)) {
             String token = message.get(BundleKey.TOKEN);
             if (!JwtTokenUtil.validate(token)) {

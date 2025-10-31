@@ -79,7 +79,6 @@ public class LoginScene extends Scene {
             JSONObject json = new JSONObject();
             json.put(JsonKey.NAME, playerName);
             json.put(JsonKey.PASSWORD, password);
-            LoadingUtil.start();
             try {
                 String body = HttpUtil.post(ApiUtil.get(LOGIN_PATH), json.toString());
                 json = JSONObject.parseObject(body);
@@ -95,7 +94,6 @@ public class LoginScene extends Scene {
             } catch (Exception e) {
                 getDialogService().showMessageBox("连接服务器失败");
             }
-            LoadingUtil.end();
         });
 
         registerButton.setOnAction(_ -> {
@@ -112,14 +110,12 @@ public class LoginScene extends Scene {
                 json.put(JsonKey.NAME, playerName);
                 json.put(JsonKey.EMAIL, email);
                 json.put(JsonKey.PASSWORD, password);
-                LoadingUtil.start();
                 try {
                     String body = HttpUtil.post(ApiUtil.get(PRE_REGISTER_PATH), json.toString());
                     json = JSONObject.parseObject(body);
                     int code = json.getIntValue(JsonKey.CODE, 0);
                     if (code == HttpResponse.SC_OK) {
                         getDialogService().showInputBox("请检查邮箱并输入验证码", key -> {
-                            LoadingUtil.start();
                             JSONObject keyJson = new JSONObject();
                             keyJson.put(JsonKey.KEY, key);
                             String regRepBody = HttpUtil.post(ApiUtil.get(REGISTER_PATH), keyJson.toString());
@@ -133,7 +129,6 @@ public class LoginScene extends Scene {
                             } else {
                                 getDialogService().showMessageBox(regRepJson.getString(JsonKey.MSG));
                             }
-                            LoadingUtil.end();
                         });
 
                     } else {
@@ -142,7 +137,6 @@ public class LoginScene extends Scene {
                 } catch (Exception e) {
                     getDialogService().showMessageBox("连接服务器失败");
                 }
-                LoadingUtil.end();
             });
         });
 
@@ -160,14 +154,12 @@ public class LoginScene extends Scene {
                 json.put(JsonKey.NAME, playerName);
                 json.put(JsonKey.EMAIL, email);
                 json.put(JsonKey.PASSWORD, password);
-                LoadingUtil.start();
                 try {
                     String body = HttpUtil.post(ApiUtil.get(PRE_FORGET_PATH), json.toString());
                     json = JSONObject.parseObject(body);
                     int code = json.getIntValue(JsonKey.CODE, 0);
                     if (code == HttpResponse.SC_OK) {
                         getDialogService().showInputBox("请检查邮箱并输入验证码", key -> {
-                            LoadingUtil.start();
                             JSONObject keyJson = new JSONObject();
                             keyJson.put(JsonKey.KEY, key);
                             String regRepBody = HttpUtil.post(ApiUtil.get(FORGET_PATH), keyJson.toString());
@@ -181,7 +173,6 @@ public class LoginScene extends Scene {
                             } else {
                                 getDialogService().showMessageBox(regRepJson.getString(JsonKey.MSG));
                             }
-                            LoadingUtil.end();
                         });
 
                     } else {
@@ -190,7 +181,6 @@ public class LoginScene extends Scene {
                 } catch (Exception e) {
                     getDialogService().showMessageBox("连接服务器失败");
                 }
-                LoadingUtil.end();
             });
         });
     }

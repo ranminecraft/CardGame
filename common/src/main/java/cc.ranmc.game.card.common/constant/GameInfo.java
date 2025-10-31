@@ -7,6 +7,9 @@ public class GameInfo {
     public static final int TCP_PORT = 2261;
     public static final int HTTP_PORT = 2262;
     public static final String ADDRESS = "localhost";
+    /*public static final int TCP_PORT = 14226;
+    public static final int HTTP_PORT = 13262;
+    public static final String ADDRESS = "111.170.14.25";*/
     public static String FONT = "SourceHanSansCN-Bold.otf";
     public static int HEIGHT = 540;
     public static int WIDTH = 960;

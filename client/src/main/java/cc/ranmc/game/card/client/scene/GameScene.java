@@ -23,10 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static cc.ranmc.game.card.common.constant.BundleKey.ID;
+import static cc.ranmc.game.card.common.constant.BundleKey.CHAT;
 import static cc.ranmc.game.card.common.constant.BundleKey.MOVE;
-import static cc.ranmc.game.card.common.constant.BundleKey.PLAYERS;
-import static cc.ranmc.game.card.common.constant.BundleKey.PLAYER_NAME;
 import static cc.ranmc.game.card.common.constant.BundleKey.X;
 import static cc.ranmc.game.card.common.constant.BundleKey.Y;
 import static cc.ranmc.game.card.common.constant.GameInfo.ADDRESS;
@@ -95,6 +93,18 @@ public class GameScene extends Scene {
         }, KeyCode.D, this.getClass().toString());
 
         InputUtil.add(()-> {
+            getDialogService().showInputBox("请输入聊天内容", msg -> {
+                if (msg.length() > 12) {
+                    getDialogService().showMessageBox("聊天内容过长");
+                    return;
+                }
+                Bundle bundle = new Bundle(CHAT);
+                bundle.put(CHAT, msg);
+                clientConnection.send(bundle);
+            });
+        }, KeyCode.ENTER, this.getClass().toString());
+
+        InputUtil.add(()-> {
             id = 0;
             playerMap.clear();
             client.disconnect();
@@ -121,7 +131,7 @@ public class GameScene extends Scene {
         client = FXGL.getNetService().newTCPClient(ADDRESS, TCP_PORT);
         client.setOnConnected(connection -> {
             clientConnection = connection;
-            helpText.setText("WSAD 移动  Esc 返回主菜单");
+            helpText.setText("WSAD 移动  Esc 返回主菜单 Enter 聊天");
             Bundle bundle = new Bundle(BundleKey.TOKEN);
 
             String token = Main.getSave().get(BundleKey.TOKEN);
@@ -145,30 +155,46 @@ public class GameScene extends Scene {
     }
 
     private void handleMessage(Bundle message) {
-        if (message.getName().equals(MOVE)) {
-            int pid = message.get(ID);
+        if (message.getName().equals(BundleKey.MOVE)) {
+            int pid = message.get(BundleKey.ID);
             if (pid != id && playerMap.containsKey(pid)) {
-                playerMap.get(pid).setX(message.get(X));
-                playerMap.get(pid).setY(message.get(Y));
+                playerMap.get(pid).setX(message.get(BundleKey.X));
+                playerMap.get(pid).setY(message.get(BundleKey.Y));
             }
-        } else if (message.getName().equals(ID)) {
-            id = message.get(ID);
-        } else if (message.getName().equals(PLAYERS)) {
+        } else if (message.getName().equals(BundleKey.ID)) {
+            id = message.get(BundleKey.ID);
+        } else if (message.getName().equals(BundleKey.CHAT)) {
+            System.out.println(message);
+            int pid = message.get(BundleKey.ID);
+            if (playerMap.containsKey(pid)) {
+                Text chatText = (Text) playerMap.get(pid).getViewComponent().getChildren().get(2);
+                chatText.setText("：" + message.get(BundleKey.CHAT));
+                FXGL.runOnce(() -> chatText.setText(""), Duration.seconds(5));
+            }
+        } else if (message.getName().equals(BundleKey.PLAYERS)) {
             List<Integer> list = new ArrayList<>();
-            JSONArray.parse(message.get(PLAYERS)).forEach(obj -> {
+            JSONArray.parse(message.get(BundleKey.PLAYERS)).forEach(obj -> {
                 JSONObject json = (JSONObject) obj;
-                int pid = json.getInteger(ID);
+                int pid = json.getInteger(BundleKey.ID);
                 list.add(pid);
                 if (!playerMap.containsKey(pid)) {
-                    Text nameText = new Text(json.getString(PLAYER_NAME));
+                    Text nameText = new Text(json.getString(BundleKey.PLAYER_NAME));
                     nameText.setFill(Color.BLUE);
-                    nameText.setFont(Font.font(15));
+                    nameText.setFont(Font.font(16));
                     nameText.setTranslateY(-10);
+
+                    Text chatText = new Text("");
+                    chatText.setFill(Color.GREEN);
+                    chatText.setFont(Font.font(18));
+                    chatText.setTranslateY(25);
+                    chatText.setTranslateX(PLAYER_SIZE);
+
                     playerMap.put(pid,
                             FXGL.entityBuilder()
                                     .at(150, 150)
                                     .view("player.png")
                                     .view(nameText)
+                                    .view(chatText)
                                     .buildAndAttach());
                 }
             });

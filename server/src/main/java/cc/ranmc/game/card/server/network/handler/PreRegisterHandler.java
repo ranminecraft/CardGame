@@ -87,7 +87,7 @@ public class PreRegisterHandler {
                 return;
             }
         }
-        parms.put(JsonKey.REG_ADDRESS, context.header("X-Real-IP"));
+        parms.put(JsonKey.REG_ADDRESS, context.ip());
         preRegister(parms);
         json.put(CODE, SC_OK);
         json.put(MSG, "成功");

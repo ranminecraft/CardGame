@@ -58,7 +58,7 @@ public class LoginHandler {
 
         Main.getData().update(SQLKey.PLAYER, new SQLFilter()
                 .set(SQLKey.LAST_LOGIN, System.currentTimeMillis())
-                .andSet(SQLKey.LAST_ADDRESS, context.header("X-Real-IP"))
+                .andSet(SQLKey.LAST_ADDRESS, context.ip())
                 .where(SQLKey.NAME, parms.getString(JsonKey.NAME)));
 
         json.put(CODE, SC_OK);
