@@ -7,4 +7,5 @@ public class HttpPath {
     public static final String FORGET_PATH = "/forget";
     public static final String PRE_FORGET_PATH = "/pre-forget";
     public static final String LOGIN_PATH = "/login";
+    public static final String INFO_PATH = "/info";
 }

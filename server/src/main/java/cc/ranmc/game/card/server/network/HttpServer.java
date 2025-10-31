@@ -4,6 +4,7 @@ import cc.ranmc.game.card.server.constant.JsonKey;
 import cc.ranmc.game.card.server.Main;
 import cc.ranmc.game.card.server.network.handler.BaseHandler;
 import cc.ranmc.game.card.server.network.handler.ForgetHandler;
+import cc.ranmc.game.card.server.network.handler.InfoHandler;
 import cc.ranmc.game.card.server.network.handler.LoginHandler;
 import cc.ranmc.game.card.server.network.handler.PreForgetHandler;
 import cc.ranmc.game.card.server.network.handler.PreRegisterHandler;
@@ -12,6 +13,7 @@ import io.javalin.Javalin;
 
 import static cc.ranmc.game.card.server.constant.HttpPath.BASE_PATH;
 import static cc.ranmc.game.card.server.constant.HttpPath.FORGET_PATH;
+import static cc.ranmc.game.card.server.constant.HttpPath.INFO_PATH;
 import static cc.ranmc.game.card.server.constant.HttpPath.LOGIN_PATH;
 import static cc.ranmc.game.card.server.constant.HttpPath.PRE_FORGET_PATH;
 import static cc.ranmc.game.card.server.constant.HttpPath.PRE_REGISTER_PATH;
@@ -28,6 +30,7 @@ public class HttpServer {
                 .post(PRE_FORGET_PATH, PreForgetHandler::handle)
                 .post(FORGET_PATH, ForgetHandler::handle)
                 .post(LOGIN_PATH, LoginHandler::handle)
+                .post(INFO_PATH, InfoHandler::handle)
                 .start(port);
         Main.getLogger().info("HTTP已成功运行在端口 {}", port);
     }

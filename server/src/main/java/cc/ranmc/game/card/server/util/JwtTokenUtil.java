@@ -48,7 +48,7 @@ public class JwtTokenUtil {
         return email;
     }
 
-    public static Claims getPayload(String token) throws Exception {
+    private static Claims getPayload(String token) throws Exception {
         Claims claims;
         try {
             claims = Jwts.parser()
@@ -62,8 +62,12 @@ public class JwtTokenUtil {
         return claims;
     }
 
-    public static boolean validate(String token) throws Exception {
-        return getPayload(token).getIssuer().equals(AUTHOR) && !isExpired(token);
+    public static boolean validate(String token) {
+        try {
+            return getPayload(token).getIssuer().equals(AUTHOR) && !isExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private static boolean isExpired(String token) throws Exception {
