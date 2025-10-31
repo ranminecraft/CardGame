@@ -1,7 +1,7 @@
 package cc.ranmc.game.card.server.network.handler;
 
 import cc.ranmc.game.card.server.Main;
-import cc.ranmc.game.card.server.constant.JsonKey;
+import cc.ranmc.game.card.common.constant.JsonKey;
 import cc.ranmc.game.card.server.constant.SQLKey;
 import cc.ranmc.game.card.server.sql.SQLRow;
 import cc.ranmc.game.card.server.util.JwtTokenUtil;
@@ -9,9 +9,9 @@ import com.alibaba.fastjson2.JSONObject;
 import io.javalin.http.ContentType;
 import io.javalin.http.Context;
 
-import static cc.ranmc.game.card.server.constant.JsonKey.CODE;
-import static cc.ranmc.game.card.server.constant.JsonKey.MSG;
-import static cc.ranmc.game.card.server.constant.JsonKey.TOKEN;
+import static cc.ranmc.game.card.common.constant.JsonKey.CODE;
+import static cc.ranmc.game.card.common.constant.JsonKey.MSG;
+import static cc.ranmc.game.card.common.constant.JsonKey.TOKEN;
 import static cc.ranmc.game.card.server.network.handler.PreRegisterHandler.PRE_REGISTER_MAP;
 import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_OK;

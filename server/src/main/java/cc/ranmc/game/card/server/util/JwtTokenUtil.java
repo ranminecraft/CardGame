@@ -1,6 +1,6 @@
 package cc.ranmc.game.card.server.util;
 
-import cc.ranmc.game.card.server.constant.JsonKey;
+import cc.ranmc.game.card.common.constant.JsonKey;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

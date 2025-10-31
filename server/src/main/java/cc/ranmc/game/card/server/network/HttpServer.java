@@ -1,6 +1,6 @@
 package cc.ranmc.game.card.server.network;
 
-import cc.ranmc.game.card.server.constant.JsonKey;
+import cc.ranmc.game.card.common.constant.JsonKey;
 import cc.ranmc.game.card.server.Main;
 import cc.ranmc.game.card.server.network.handler.BaseHandler;
 import cc.ranmc.game.card.server.network.handler.ForgetHandler;
@@ -11,13 +11,13 @@ import cc.ranmc.game.card.server.network.handler.PreRegisterHandler;
 import cc.ranmc.game.card.server.network.handler.RegisterHandler;
 import io.javalin.Javalin;
 
-import static cc.ranmc.game.card.server.constant.HttpPath.BASE_PATH;
-import static cc.ranmc.game.card.server.constant.HttpPath.FORGET_PATH;
-import static cc.ranmc.game.card.server.constant.HttpPath.INFO_PATH;
-import static cc.ranmc.game.card.server.constant.HttpPath.LOGIN_PATH;
-import static cc.ranmc.game.card.server.constant.HttpPath.PRE_FORGET_PATH;
-import static cc.ranmc.game.card.server.constant.HttpPath.PRE_REGISTER_PATH;
-import static cc.ranmc.game.card.server.constant.HttpPath.REGISTER_PATH;
+import static cc.ranmc.game.card.common.constant.HttpPath.BASE_PATH;
+import static cc.ranmc.game.card.common.constant.HttpPath.FORGET_PATH;
+import static cc.ranmc.game.card.common.constant.HttpPath.INFO_PATH;
+import static cc.ranmc.game.card.common.constant.HttpPath.LOGIN_PATH;
+import static cc.ranmc.game.card.common.constant.HttpPath.PRE_FORGET_PATH;
+import static cc.ranmc.game.card.common.constant.HttpPath.PRE_REGISTER_PATH;
+import static cc.ranmc.game.card.common.constant.HttpPath.REGISTER_PATH;
 import static cc.ranmc.game.card.server.util.ConfigUtil.CONFIG;
 
 public class HttpServer {

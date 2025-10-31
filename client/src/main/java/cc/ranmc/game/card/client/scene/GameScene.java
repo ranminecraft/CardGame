@@ -7,9 +7,13 @@ import com.alibaba.fastjson2.JSONObject;
 import com.almasb.fxgl.core.serialization.Bundle;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.EntityFactory;
+import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.net.Client;
 import com.almasb.fxgl.net.Connection;
 import com.almasb.fxgl.scene.Scene;
+import com.almasb.fxgl.texture.Texture;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -28,7 +32,8 @@ import static cc.ranmc.game.card.common.constant.BundleKey.PLAYER_NAME;
 import static cc.ranmc.game.card.common.constant.BundleKey.X;
 import static cc.ranmc.game.card.common.constant.BundleKey.Y;
 import static cc.ranmc.game.card.common.constant.GameInfo.ADDRESS;
-import static cc.ranmc.game.card.common.constant.GameInfo.PORT;
+import static cc.ranmc.game.card.common.constant.GameInfo.NAME;
+import static cc.ranmc.game.card.common.constant.GameInfo.TCP_PORT;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getDialogService;
 
 public class GameScene extends Scene {
@@ -43,10 +48,22 @@ public class GameScene extends Scene {
 
     @Override
     public void onCreate() {
-        connect();
+        Texture background = FXGL.getAssetLoader().loadTexture("game.png");
+        background.setFitWidth(960);
+        background.setFitHeight(540);
+        background.setTranslateX(0);
+        background.setTranslateY(0);
+        FXGL.entityBuilder()
+                .at(0, 0)
+                .view(background)
+                .zIndex(-1000)
+                .buildAndAttach();
+
         helpText = new Text("请稍后，正在连接服务器中...");
         helpText.setFont(Font.font(18));
         FXGL.addUINode(helpText, 10, 20);
+
+        connect();
 
         InputUtil.add(()-> {
             if (!playerMap.containsKey(id)) return;
@@ -104,12 +121,16 @@ public class GameScene extends Scene {
     }
 
     protected void connect() {
-        client = FXGL.getNetService().newTCPClient(ADDRESS, PORT);
+        client = FXGL.getNetService().newTCPClient(ADDRESS, TCP_PORT);
         client.setOnConnected(connection -> {
             clientConnection = connection;
             helpText.setText("WSAD 移动  Esc 返回主菜单");
             Bundle bundle = new Bundle(PLAYER_NAME);
-            bundle.put(PLAYER_NAME, Main.getPlayerName());
+
+            String name = Main.getSave().get(NAME);
+            if (name == null || name.isEmpty()) name = "无名氏";
+
+            bundle.put(PLAYER_NAME, name);
             clientConnection.send(bundle);
 
             FXGL.getGameTimer().runAtInterval(this::updateData, Duration.millis(50));
@@ -117,7 +138,11 @@ public class GameScene extends Scene {
             connection.addMessageHandlerFX((_, message) ->
                     handleMessage(message));
         });
-        client.connectAsync();
+        client.connectTask()
+                .onFailure(error -> {
+                    FXGL.getDialogService().showMessageBox("无法连接服务器\n" + error.getMessage());
+                    Main.changeScene(new MainMenuScene());
+                }).run();
     }
 
     private void handleMessage(Bundle message) {

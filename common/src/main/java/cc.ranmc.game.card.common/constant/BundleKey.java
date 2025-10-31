@@ -8,4 +8,6 @@ public class BundleKey {
     public static String PLAYERS = "players";
     public static String SAVE = "save";
     public static String PLAYER_NAME = "playerName";
+    public static String MONEY = "money";
+    public static String TOKEN = "token";
 }

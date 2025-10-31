@@ -117,6 +117,12 @@
                 <scope>compile</scope>
             </dependency>
 
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-http</artifactId>
+                <version>5.8.41</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>

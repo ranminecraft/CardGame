@@ -38,5 +38,10 @@
             <artifactId>common</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-http</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

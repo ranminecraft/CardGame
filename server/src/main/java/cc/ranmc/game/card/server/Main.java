@@ -1,6 +1,6 @@
 package cc.ranmc.game.card.server;
 
-import cc.ranmc.game.card.server.constant.JsonKey;
+import cc.ranmc.game.card.common.constant.JsonKey;
 import cc.ranmc.game.card.server.network.GameServer;
 import cc.ranmc.game.card.server.network.HttpServer;
 import cc.ranmc.game.card.server.sql.DataSQL;

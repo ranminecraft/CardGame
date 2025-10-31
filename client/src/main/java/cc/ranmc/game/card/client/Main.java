@@ -9,10 +9,8 @@ import com.almasb.fxgl.profile.SaveLoadHandler;
 import com.almasb.fxgl.core.serialization.Bundle;
 import com.almasb.fxgl.scene.Scene;
 import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
-import static cc.ranmc.game.card.common.constant.BundleKey.PLAYER_NAME;
 import static cc.ranmc.game.card.common.constant.BundleKey.SAVE;
 import static cc.ranmc.game.card.common.constant.GameInfo.FONT;
 import static cc.ranmc.game.card.common.constant.GameInfo.HEIGHT;
@@ -27,8 +25,7 @@ public class Main extends GameApplication {
     @Getter
     private static Scene scene = new PreLoadingScene();
     @Getter
-    @Setter
-    private static String playerName = "无名氏";
+    private static Bundle save = new Bundle(SAVE);
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -51,15 +48,12 @@ public class Main extends GameApplication {
         getSaveLoadService().addHandler(new SaveLoadHandler() {
             @Override
             public void onSave(@NotNull DataFile data) {
-                Bundle bundle = new Bundle(SAVE);
-                bundle.put(PLAYER_NAME, playerName);
-                data.putBundle(bundle);
+                data.putBundle(save);
             }
 
             @Override
             public void onLoad(@NotNull DataFile data) {
-                Bundle bundle = data.getBundle(SAVE);
-                playerName = bundle.get(PLAYER_NAME);
+                save = data.getBundle(SAVE);
             }
         });
     }

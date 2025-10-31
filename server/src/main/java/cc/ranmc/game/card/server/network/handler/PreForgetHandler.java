@@ -3,7 +3,7 @@ package cc.ranmc.game.card.server.network.handler;
 import cc.ranmc.game.card.common.constant.GameInfo;
 import cc.ranmc.game.card.server.Main;
 import cc.ranmc.game.card.server.constant.EmailContext;
-import cc.ranmc.game.card.server.constant.JsonKey;
+import cc.ranmc.game.card.common.constant.JsonKey;
 import cc.ranmc.game.card.server.constant.SQLKey;
 import cc.ranmc.game.card.server.sql.SQLFilter;
 import cc.ranmc.game.card.server.sql.SQLRow;
@@ -20,8 +20,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Pattern;
 
-import static cc.ranmc.game.card.server.constant.JsonKey.CODE;
-import static cc.ranmc.game.card.server.constant.JsonKey.MSG;
+import static cc.ranmc.game.card.common.constant.JsonKey.CODE;
+import static cc.ranmc.game.card.common.constant.JsonKey.MSG;
 import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_OK;
 
@@ -50,6 +50,7 @@ public class PreForgetHandler {
             context.result(json.toString());
             return;
         }
+        parms.put(JsonKey.EMAIL, parms.getString(JsonKey.EMAIL).toLowerCase());
 
         if (!parms.containsKey(JsonKey.PASSWORD) ||
                 !Pattern.compile("^[a-z0-9]{40}$")

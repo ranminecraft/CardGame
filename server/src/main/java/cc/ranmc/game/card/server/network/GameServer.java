@@ -1,7 +1,7 @@
 package cc.ranmc.game.card.server.network;
 
 import cc.ranmc.game.card.common.bean.Player;
-import cc.ranmc.game.card.server.constant.JsonKey;
+import cc.ranmc.game.card.common.constant.JsonKey;
 import cc.ranmc.game.card.server.Main;
 import com.alibaba.fastjson2.JSONArray;
 import com.almasb.fxgl.core.serialization.Bundle;

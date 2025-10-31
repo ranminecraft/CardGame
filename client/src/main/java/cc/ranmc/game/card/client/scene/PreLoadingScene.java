@@ -10,6 +10,7 @@ import javafx.scene.Cursor;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
+import static cc.ranmc.game.card.common.constant.BundleKey.TOKEN;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameTimer;
 
@@ -36,13 +37,18 @@ public class PreLoadingScene extends Scene {
         fadeIn.play();
         FXGL.getGameScene().addUINode(logo);
 
-        Runnable runnable = ()-> Main.changeScene(new MainMenuScene());
+        Runnable runnable = PreLoadingScene::skip;
         InputUtil.add(runnable, KeyCode.ENTER, this.getClass().toString());
         InputUtil.add(runnable, KeyCode.SPACE, this.getClass().toString());
         InputUtil.add(runnable, KeyCode.ESCAPE, this.getClass().toString());
 
-        getGameTimer().runOnceAfter(() ->
-                Main.changeScene(new MainMenuScene()), Duration.millis(6000));
+        getGameTimer().runOnceAfter(PreLoadingScene::skip, Duration.millis(6000));
+    }
+
+    private static void skip() {
+        String token = Main.getSave().get(TOKEN);
+        Main.changeScene(token == null || token.isEmpty() ?
+                new LoginScene() : new MainMenuScene());
     }
 
 }

@@ -1,4 +1,4 @@
-package cc.ranmc.game.card.server.constant;
+package cc.ranmc.game.card.common.constant;
 
 public class JsonKey {
     public static final String EMAIL = "email";
