@@ -1,0 +1,8 @@
+package cc.ranmc.game.card.server.constant;
+
+public class SQLKey {
+    public static final String PLAYER = "Player";
+    public static final String EMAIL = "Email";
+    public static final String MONEY = "Money";
+    public static final String PASSWORD = "Password";
+}

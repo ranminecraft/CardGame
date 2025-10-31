@@ -1,52 +1,30 @@
-package cc.ranmc.game.card.server;
+package cc.ranmc.game.card.server.network;
 
 import cc.ranmc.game.card.common.bean.Player;
+import cc.ranmc.game.card.server.constant.ConfigKey;
+import cc.ranmc.game.card.server.Main;
+import com.alibaba.fastjson2.JSONArray;
 import com.almasb.fxgl.core.serialization.Bundle;
 import com.almasb.fxgl.net.Server;
-import com.alibaba.fastjson2.JSONArray;
 import com.almasb.fxgl.net.tcp.TCPServer;
-import io.github.biezhi.ome.OhMyEmail;
-import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import static cc.ranmc.game.card.common.constant.BundleKey.ID;
 import static cc.ranmc.game.card.common.constant.BundleKey.MOVE;
 import static cc.ranmc.game.card.common.constant.BundleKey.PLAYERS;
 import static cc.ranmc.game.card.common.constant.BundleKey.PLAYER_NAME;
-import static cc.ranmc.game.card.common.constant.GameInfo.NAME;
-import static cc.ranmc.game.card.common.constant.GameInfo.AUTHOR;
-import static cc.ranmc.game.card.common.constant.GameInfo.VERSION;
-import static io.github.biezhi.ome.OhMyEmail.defaultConfig;
+import static cc.ranmc.game.card.server.util.ConfigUtil.CONFIG;
 
-public class Main {
-
-    private static final int PORT = 2261;
+public class GameServer {
+    private static int id = 0;
     private static Server<Bundle> server;
     private static final Map<String, Player> playerMap = new HashMap<>();
-    private static int id = 0;
-    @Getter
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-    static void main() {
-        System.out.println("-----------------------");
-        System.out.println(NAME + " By " + AUTHOR);
-        System.out.println("Version: " + VERSION);
-        System.out.println("-----------------------");
-
-        // 初始化邮件
-        Properties props = defaultConfig(false);
-        props.put("mail.smtp.ssl.enable", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.qcloudmail.com");
-        props.put("mail.smtp.port", "465");
-        OhMyEmail.config(props, "bot@ranmc.cc", "");
-
-        server = new TCPServer<>(PORT, Bundle.class);
+    public static void start() {
+        int port = CONFIG.getIntValue(ConfigKey.TCP_PORT, 2261);
+        server = new TCPServer<>(port, Bundle.class);
         server.setOnConnected(connection -> {
 
             id++;
@@ -54,25 +32,18 @@ public class Main {
             Bundle bundle = new Bundle(ID);
             bundle.put(ID, id);
             connection.send(bundle);
-            getLogger().info("客户端连接{} id{}", connection, id);
+            Main.getLogger().info("客户端连接{} id{}", connection, id);
 
             connection.addMessageHandler((_, message) ->
                     handleMessage(connection.toString(), message));
         });
         server.setOnDisconnected(connection -> {
-            getLogger().info("客户端断开{} id{}", connection, playerMap.get(connection.toString()).getId());
+            Main.getLogger().info("客户端断开{} id{}", connection, playerMap.get(connection.toString()).getId());
             playerMap.remove(connection.toString());
             updatePlayerList();
         });
         server.startAsync();
-        getLogger().info("已成功运行在端口 " + PORT);
-        while (true) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                break;
-            }
-        }
+        Main.getLogger().info("TCP已成功运行在端口 {}", port);
     }
 
     private static void handleMessage(String connectionKey,Bundle message) {
