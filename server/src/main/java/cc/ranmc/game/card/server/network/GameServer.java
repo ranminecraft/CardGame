@@ -19,9 +19,7 @@ import java.util.Map;
 
 import static cc.ranmc.game.card.common.constant.BundleKey.ID;
 import static cc.ranmc.game.card.common.constant.BundleKey.PLAYERS;
-import static cc.ranmc.game.card.common.constant.BundleKey.PLAYER_NAME;
 import static cc.ranmc.game.card.server.util.ConfigUtil.CONFIG;
-import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 public class GameServer {
     private static Server<Bundle> server;
@@ -63,6 +61,12 @@ public class GameServer {
             }
             SQLRow sqlRow = Main.getData().selectRow(SQLKey.PLAYER,
                     new SQLFilter().where(SQLKey.EMAIL, email));
+            for (Player p : playerMap.values()) {
+                if (p.getPlayerName().equals(sqlRow.getString(SQLKey.NAME))) {
+                    connection.terminate();
+                    return;
+                }
+            }
             Player player = new Player();
             player.setId(sqlRow.getInt(SQLKey.ID));
             player.setPlayerName(sqlRow.getString(SQLKey.NAME));
