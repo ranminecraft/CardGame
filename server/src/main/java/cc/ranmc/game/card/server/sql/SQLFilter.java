@@ -31,6 +31,11 @@ public class SQLFilter {
         return this;
     }
 
+    public SQLFilter andSet(String name, long value) {
+        result += " , " + name + " = " + value;
+        return this;
+    }
+
     public SQLFilter setNull(String name) {
         result += " SET " + name + " = null";
         return this;

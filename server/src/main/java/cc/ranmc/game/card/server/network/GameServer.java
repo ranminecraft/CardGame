@@ -1,7 +1,7 @@
 package cc.ranmc.game.card.server.network;
 
 import cc.ranmc.game.card.common.bean.Player;
-import cc.ranmc.game.card.server.constant.ConfigKey;
+import cc.ranmc.game.card.server.constant.JsonKey;
 import cc.ranmc.game.card.server.Main;
 import com.alibaba.fastjson2.JSONArray;
 import com.almasb.fxgl.core.serialization.Bundle;
@@ -23,7 +23,7 @@ public class GameServer {
     private static final Map<String, Player> playerMap = new HashMap<>();
 
     public static void start() {
-        int port = CONFIG.getIntValue(ConfigKey.TCP_PORT, 2261);
+        int port = CONFIG.getIntValue(JsonKey.TCP_PORT, 2261);
         server = new TCPServer<>(port, Bundle.class);
         server.setOnConnected(connection -> {
 

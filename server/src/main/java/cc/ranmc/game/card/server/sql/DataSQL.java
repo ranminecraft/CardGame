@@ -16,6 +16,9 @@ public class DataSQL extends SQLBase {
                 " Name TEXT NOT NULL," +
                 " Email INTEGER," +
                 " Password TEXT," +
+                " RegAddress TEXT," +
+                " LastAddress TEXT," +
+                " LastLogin INTEGER," +
                 " Money INTEGER)");
     }
 

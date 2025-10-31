@@ -86,11 +86,11 @@ public class SQLBase {
      * @param filter 数据
      * @return 数据
      */
-    public SQLRow selectMap(String table, SQLFilter filter) {
+    public SQLRow selectRow(String table, SQLFilter filter) {
         return queryMap("SELECT * FROM " + table.toUpperCase() + filter.getResult());
     }
 
-    public SQLRow selectMap(String table) {
+    public SQLRow selectRow(String table) {
         return queryMap("SELECT * FROM " + table.toUpperCase());
     }
 
