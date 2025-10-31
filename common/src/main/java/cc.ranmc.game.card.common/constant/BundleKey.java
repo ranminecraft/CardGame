@@ -9,5 +9,6 @@ public class BundleKey {
     public static String SAVE = "save";
     public static String PLAYER_NAME = "playerName";
     public static String MONEY = "money";
+    public static String NAME = "name";
     public static String TOKEN = "token";
 }

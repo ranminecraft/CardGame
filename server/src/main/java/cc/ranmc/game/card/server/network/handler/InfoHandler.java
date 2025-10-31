@@ -43,6 +43,7 @@ public class InfoHandler {
         SQLRow sqlRow = Main.getData().selectRow(SQLKey.PLAYER, new SQLFilter().where(SQLKey.EMAIL, email));
 
         json.put(CODE, SC_OK);
+        json.put(JsonKey.NAME, sqlRow.getString(SQLKey.NAME));
         json.put(JsonKey.MONEY, sqlRow.getInt(SQLKey.MONEY));
         json.put(MSG, "成功");
         context.result(json.toString());

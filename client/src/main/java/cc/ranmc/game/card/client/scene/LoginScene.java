@@ -4,6 +4,7 @@ import cc.ranmc.game.card.client.Main;
 import cc.ranmc.game.card.client.util.ApiUtil;
 import cc.ranmc.game.card.client.util.HashUtil;
 import cc.ranmc.game.card.client.util.LoadingUtil;
+import cc.ranmc.game.card.common.constant.BundleKey;
 import cc.ranmc.game.card.common.constant.HttpResponse;
 import cc.ranmc.game.card.common.constant.JsonKey;
 import cn.hutool.http.HttpUtil;
@@ -20,7 +21,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import static cc.ranmc.game.card.common.constant.BundleKey.TOKEN;
 import static cc.ranmc.game.card.common.constant.GameInfo.NAME;
 import static cc.ranmc.game.card.common.constant.GameInfo.SAVE_FILE_NAME;
 import static cc.ranmc.game.card.common.constant.HttpPath.FORGET_PATH;
@@ -85,7 +85,8 @@ public class LoginScene extends Scene {
                 json = JSONObject.parseObject(body);
                 int code = json.getIntValue(JsonKey.CODE, 0);
                 if (code == HttpResponse.SC_OK) {
-                    Main.getSave().put(TOKEN, json.getString(JsonKey.TOKEN));
+                    Main.getSave().put(BundleKey.TOKEN, json.getString(JsonKey.TOKEN));
+                    Main.getSave().put(BundleKey.NAME, playerName);
                     FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
                     Main.changeScene(new MainMenuScene());
                 } else {
@@ -98,14 +99,14 @@ public class LoginScene extends Scene {
         });
 
         registerButton.setOnAction(_ -> {
+            if (passwordField.getText() == null ||
+                    passwordField.getText().isEmpty() ||
+                    passwordField.getText().length() < 6) {
+                getDialogService().showMessageBox("密码长度必须大于6位");
+                return;
+            }
             getDialogService().showInputBox("输入您的邮箱", email -> {
                 String playerName = playerNameField.getText();
-                if (passwordField.getText() == null ||
-                        passwordField.getText().isEmpty() ||
-                        passwordField.getText().length() < 6) {
-                    getDialogService().showMessageBox("密码长度必须大于6位");
-                    return;
-                }
                 String password = HashUtil.sha1(passwordField.getText());
                 JSONObject json = new JSONObject();
                 json.put(JsonKey.NAME, playerName);
@@ -125,7 +126,8 @@ public class LoginScene extends Scene {
                             JSONObject regRepJson = JSONObject.parseObject(regRepBody);
                             int regRepCode = regRepJson.getIntValue(JsonKey.CODE, 0);;
                             if (regRepCode == HttpResponse.SC_OK) {
-                                Main.getSave().put(TOKEN, regRepJson.getString(JsonKey.TOKEN));
+                                Main.getSave().put(BundleKey.TOKEN, regRepJson.getString(JsonKey.TOKEN));
+                                Main.getSave().put(BundleKey.NAME, playerName);
                                 FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
                                 Main.changeScene(new MainMenuScene());
                             } else {
@@ -145,14 +147,14 @@ public class LoginScene extends Scene {
         });
 
         forgotButton.setOnAction(_ -> {
+            if (passwordField.getText() == null ||
+                    passwordField.getText().isEmpty() ||
+                    passwordField.getText().length() < 6) {
+                getDialogService().showMessageBox("密码长度必须大于6位");
+                return;
+            }
             getDialogService().showInputBox("输入您的邮箱", email -> {
                 String playerName = playerNameField.getText();
-                if (passwordField.getText() == null ||
-                        passwordField.getText().isEmpty() ||
-                        passwordField.getText().length() < 6) {
-                    getDialogService().showMessageBox("密码长度必须大于6位");
-                    return;
-                }
                 String password = HashUtil.sha1(passwordField.getText());
                 JSONObject json = new JSONObject();
                 json.put(JsonKey.NAME, playerName);
@@ -172,7 +174,8 @@ public class LoginScene extends Scene {
                             JSONObject regRepJson = JSONObject.parseObject(regRepBody);
                             int regRepCode = regRepJson.getIntValue(JsonKey.CODE, 0);;
                             if (regRepCode == HttpResponse.SC_OK) {
-                                Main.getSave().put(TOKEN, regRepJson.getString(JsonKey.TOKEN));
+                                Main.getSave().put(BundleKey.TOKEN, regRepJson.getString(JsonKey.TOKEN));
+                                Main.getSave().put(BundleKey.NAME, playerName);
                                 FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
                                 Main.changeScene(new MainMenuScene());
                             } else {
