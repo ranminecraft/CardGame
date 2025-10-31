@@ -2,6 +2,7 @@ package cc.ranmc.game.card.client.scene;
 
 import cc.ranmc.game.card.client.Main;
 import cc.ranmc.game.card.client.util.InputUtil;
+import cc.ranmc.game.card.common.constant.BundleKey;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.almasb.fxgl.core.serialization.Bundle;
@@ -29,6 +30,7 @@ import static cc.ranmc.game.card.common.constant.BundleKey.ID;
 import static cc.ranmc.game.card.common.constant.BundleKey.MOVE;
 import static cc.ranmc.game.card.common.constant.BundleKey.PLAYERS;
 import static cc.ranmc.game.card.common.constant.BundleKey.PLAYER_NAME;
+import static cc.ranmc.game.card.common.constant.BundleKey.TOKEN;
 import static cc.ranmc.game.card.common.constant.BundleKey.X;
 import static cc.ranmc.game.card.common.constant.BundleKey.Y;
 import static cc.ranmc.game.card.common.constant.GameInfo.ADDRESS;
@@ -125,15 +127,17 @@ public class GameScene extends Scene {
         client.setOnConnected(connection -> {
             clientConnection = connection;
             helpText.setText("WSAD 移动  Esc 返回主菜单");
-            Bundle bundle = new Bundle(PLAYER_NAME);
+            Bundle bundle = new Bundle(BundleKey.TOKEN);
 
-            String name = Main.getSave().get(NAME);
-            if (name == null || name.isEmpty()) name = "无名氏";
-
-            bundle.put(PLAYER_NAME, name);
+            String token = Main.getSave().get(BundleKey.TOKEN);
+            if (token == null || token.isEmpty()) {
+                client.disconnect();
+                return;
+            }
+            bundle.put(BundleKey.TOKEN, token);
             clientConnection.send(bundle);
 
-            FXGL.getGameTimer().runAtInterval(this::updateData, Duration.millis(50));
+            FXGL.getGameTimer().runAtInterval(this::updateData, Duration.millis(10));
 
             connection.addMessageHandlerFX((_, message) ->
                     handleMessage(message));

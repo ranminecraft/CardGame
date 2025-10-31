@@ -1,6 +1,7 @@
 package cc.ranmc.game.card.server.constant;
 
 public class SQLKey {
+    public static final String ID = "ID";
     public static final String PLAYER = "Player";
     public static final String NAME = "Name";
     public static final String EMAIL = "Email";
