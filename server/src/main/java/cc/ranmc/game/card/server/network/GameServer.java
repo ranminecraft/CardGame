@@ -23,7 +23,7 @@ import static cc.ranmc.game.card.server.util.ConfigUtil.CONFIG;
 
 public class GameServer {
     private static Server<Bundle> server;
-    private static final Map<String, Player> playerMap = new HashMap<>();
+    private static final Map<Connection<Bundle>, Player> playerMap = new HashMap<>();
 
     public static void start() {
         int port = CONFIG.getIntValue(JsonKey.TCP_PORT, 2261);
@@ -35,7 +35,7 @@ public class GameServer {
         });
         server.setOnDisconnected(connection -> {
             Main.getLogger().info("客户端断开{}", connection);
-            playerMap.remove(connection.toString());
+            playerMap.remove(connection);
             updatePlayerList();
         });
         server.startAsync();
@@ -44,10 +44,12 @@ public class GameServer {
 
     private static void handleMessage(Connection<Bundle> connection, Bundle message) {
         if (message.getName().equals(BundleKey.MOVE)) {
-            message.put(BundleKey.ID, playerMap.get(connection.toString()).getId());
+            message.put(BundleKey.ID, playerMap.get(connection).getId());
             server.broadcast(message);
+        } else if (message.getName().equals(BundleKey.PING)) {
+            connection.send(new Bundle(BundleKey.PONG));
         } else if (message.getName().equals(BundleKey.CHAT)) {
-            Player player = playerMap.get(connection.toString());
+            Player player = playerMap.get(connection);
             message.put(BundleKey.ID, player.getId());
             Main.getLogger().info("id{} 玩家名{} 说 {}",
                     player.getId(), player.getPlayerName(), message.get(BundleKey.CHAT));
@@ -56,6 +58,7 @@ public class GameServer {
             String token = message.get(BundleKey.TOKEN);
             if (!JwtTokenUtil.validate(token)) {
                 connection.terminate();
+                Main.getLogger().warn("连接断开 Token 过期");
                 return;
             }
             String email;
@@ -63,20 +66,22 @@ public class GameServer {
                 email = JwtTokenUtil.getEmail(token);
             } catch (Exception e) {
                 connection.terminate();
+                Main.getLogger().warn("连接断开 无法获取邮箱");
                 return;
             }
             SQLRow sqlRow = Main.getData().selectRow(SQLKey.PLAYER,
                     new SQLFilter().where(SQLKey.EMAIL, email));
-            for (Player p : playerMap.values()) {
-                if (p.getPlayerName().equals(sqlRow.getString(SQLKey.NAME))) {
-                    connection.terminate();
-                    return;
+            for (Connection<Bundle> c : playerMap.keySet()) {
+                if (playerMap.get(c).getPlayerName().equals(sqlRow.getString(SQLKey.NAME))) {
+                    c.terminate();
+                    Main.getLogger().warn("连接断开 玩家在别处连接");
+                    break;
                 }
             }
             Player player = new Player();
             player.setId(sqlRow.getInt(SQLKey.ID));
             player.setPlayerName(sqlRow.getString(SQLKey.NAME));
-            playerMap.put(connection.toString(), player);
+            playerMap.put(connection, player);
             Bundle bundle = new Bundle(ID);
             bundle.put(ID, sqlRow.getInt(SQLKey.ID));
             connection.send(bundle);
@@ -87,9 +92,7 @@ public class GameServer {
     private static void updatePlayerList() {
         Bundle bundle = new Bundle(PLAYERS);
         JSONArray array = new JSONArray();
-        for (String key : playerMap.keySet()) {
-            array.add(playerMap.get(key));
-        }
+        array.addAll(playerMap.values());
         bundle.put(PLAYERS, array.toString());
         server.broadcast(bundle);
     }

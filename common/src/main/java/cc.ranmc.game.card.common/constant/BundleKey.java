@@ -11,4 +11,6 @@ public class BundleKey {
     public static String CHAT = "chat";
     public static String NAME = "name";
     public static String TOKEN = "token";
+    public static String PING = "ping";
+    public static String PONG = "pong";
 }

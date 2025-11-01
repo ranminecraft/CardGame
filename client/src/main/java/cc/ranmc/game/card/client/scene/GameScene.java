@@ -40,6 +40,11 @@ public class GameScene extends Scene {
     private static Connection<Bundle> clientConnection;
     private static Client<Bundle> client;
     private static Text helpText;
+    private static int fps;
+    private static long latency;
+    private static long lastPingTime;
+    private double lastX = 0;
+    private double lastY = 0;
 
     @Override
     public void onCreate() {
@@ -59,6 +64,23 @@ public class GameScene extends Scene {
         FXGL.addUINode(helpText, 10, 20);
 
         connect();
+
+        Text statusText = new Text("FPS: 0 | Ping: 0ms");
+        statusText.setFont(Font.font(16));
+        statusText.setFill(Color.WHITE);
+        FXGL.addUINode(statusText, FXGL.getAppWidth() - 160, 20);
+        statusText.setVisible(false);
+        FXGL.getGameTimer().runAtInterval(() -> {
+            statusText.setText("FPS: " + fps + " | Ping: " + latency + "ms");
+        }, Duration.seconds(1));
+
+        FXGL.getGameTimer().runAtInterval(() -> {
+            clientConnection.send(new Bundle(BundleKey.PING));
+            lastPingTime = System.currentTimeMillis();
+        }, Duration.seconds(10));
+
+        InputUtil.addEnd(()-> statusText.setVisible(!statusText.isVisible()),
+                KeyCode.F3, this.getClass().toString());
 
         InputUtil.add(()-> {
             if (!playerMap.containsKey(id)) return;
@@ -94,7 +116,7 @@ public class GameScene extends Scene {
 
         InputUtil.add(()-> {
             getDialogService().showInputBox("请输入聊天内容", msg -> {
-                if (msg.length() > 12) {
+                if (msg.length() > 16) {
                     getDialogService().showMessageBox("聊天内容过长");
                     return;
                 }
@@ -112,14 +134,25 @@ public class GameScene extends Scene {
         }, KeyCode.ESCAPE, this.getClass().toString());
     }
 
+    @Override
+    protected void onUpdate(double tpf) {
+        fps = (int) (1 / tpf);
+    }
+
     protected void updateData() {
         if (playerMap.containsKey(id) &&
                 clientConnection != null &&
                 clientConnection.isConnected()) {
-            Bundle bundle = new Bundle(MOVE);
-            bundle.put(X, playerMap.get(id).getX());
-            bundle.put(Y, playerMap.get(id).getY());
-            clientConnection.send(bundle);
+            double x = playerMap.get(id).getX();
+            double y = playerMap.get(id).getY();
+            if (x != lastX || y != lastY) {
+                lastX = x;
+                lastY = y;
+                Bundle bundle = new Bundle(MOVE);
+                bundle.put(X, x);
+                bundle.put(Y, y);
+                clientConnection.send(bundle);
+            }
         }
         if (clientConnection != null && !clientConnection.isConnected()) {
             Main.changeScene(new MainMenuScene());
@@ -131,7 +164,7 @@ public class GameScene extends Scene {
         client = FXGL.getNetService().newTCPClient(ADDRESS, TCP_PORT);
         client.setOnConnected(connection -> {
             clientConnection = connection;
-            helpText.setText("WSAD 移动  Esc 返回主菜单 Enter 聊天");
+            helpText.setText("WSAD 移动  Esc 返回主菜单  Enter 聊天  F3 帧率显示");
             Bundle bundle = new Bundle(BundleKey.TOKEN);
 
             String token = Main.getSave().get(BundleKey.TOKEN);
@@ -163,6 +196,8 @@ public class GameScene extends Scene {
             }
         } else if (message.getName().equals(BundleKey.ID)) {
             id = message.get(BundleKey.ID);
+        } else if (message.getName().equals(BundleKey.PONG)) {
+            latency = System.currentTimeMillis() - lastPingTime;
         } else if (message.getName().equals(BundleKey.CHAT)) {
             System.out.println(message);
             int pid = message.get(BundleKey.ID);
