@@ -132,7 +132,6 @@ public class LoginScene extends Scene {
                         return;
                     }
                     JSONObject bodyJson = JSONObject.parseObject(body);
-                    System.out.println(body + " 1");
                     int code = bodyJson.getIntValue(JsonKey.CODE, 0);
                     if (code != HttpResponse.SC_OK && code != HttpResponse.SC_UNAUTHORIZED) {
                         DialogUtil.show(bodyJson.getString(JsonKey.MSG));
@@ -142,7 +141,6 @@ public class LoginScene extends Scene {
                         JSONObject keyJson = new JSONObject();
                         keyJson.put(JsonKey.KEY, key);
                         HttpUtil.post(ApiUtil.get(REGISTER_PATH), keyJson.toString(), regRepBody -> {
-                            System.out.println(regRepBody + " 2");
                             if (regRepBody.isEmpty()) {
                                 DialogUtil.show("连接服务器失败");
                                 return;
