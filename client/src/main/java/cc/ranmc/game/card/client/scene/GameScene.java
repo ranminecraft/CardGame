@@ -1,6 +1,7 @@
 package cc.ranmc.game.card.client.scene;
 
 import cc.ranmc.game.card.client.Main;
+import cc.ranmc.game.card.client.component.PlayerComponent;
 import cc.ranmc.game.card.client.util.DialogUtil;
 import cc.ranmc.game.card.client.util.InputUtil;
 import cc.ranmc.game.card.common.constant.BundleKey;
@@ -27,8 +28,6 @@ import java.util.Map;
 
 import static cc.ranmc.game.card.common.constant.BundleKey.CHAT;
 import static cc.ranmc.game.card.common.constant.BundleKey.MOVE;
-import static cc.ranmc.game.card.common.constant.BundleKey.X;
-import static cc.ranmc.game.card.common.constant.BundleKey.Y;
 import static cc.ranmc.game.card.common.constant.GameInfo.ADDRESS;
 import static cc.ranmc.game.card.common.constant.GameInfo.TCP_PORT;
 
@@ -36,8 +35,7 @@ public class GameScene extends Scene {
 
     private int id = 0;
     private final Map<Integer, Entity> playerMap = new HashMap<>();
-    private final double MOVE_SPEED = 2.0;
-    private final double PLAYER_SIZE = 40;
+    private static final double MOVE_SPEED = 1;
     private static Connection<Bundle> clientConnection;
     private static Client<Bundle> client;
     private static Text helpText;
@@ -46,6 +44,8 @@ public class GameScene extends Scene {
     private static long lastPingTime;
     private double lastX = 0;
     private double lastY = 0;
+    private static final int player_width = 32;
+    private static final int player_height = 48;
 
     @Override
     public void onDestroy() {
@@ -95,14 +95,16 @@ public class GameScene extends Scene {
             double newY = playerMap.get(id).getY() - MOVE_SPEED;
             if (newY >= 0) {
                 playerMap.get(id).setY(newY);
+                playerMap.get(id).getComponent(PlayerComponent.class).moveUp();
             }
         }, KeyCode.W, this.getClass().toString());
 
         InputUtil.add(()-> {
             if (!playerMap.containsKey(id)) return;
             double newY = playerMap.get(id).getY() + MOVE_SPEED;
-            if (newY + PLAYER_SIZE <= FXGL.getAppHeight()) {
+            if (newY + player_height <= FXGL.getAppHeight()) {
                 playerMap.get(id).setY(newY);
+                playerMap.get(id).getComponent(PlayerComponent.class).moveDown();
             }
         }, KeyCode.S, this.getClass().toString());
 
@@ -111,16 +113,27 @@ public class GameScene extends Scene {
             double newX = playerMap.get(id).getX() - MOVE_SPEED;
             if (newX >= 0) {
                 playerMap.get(id).setX(newX);
+                playerMap.get(id).getComponent(PlayerComponent.class).moveLeft();
             }
         }, KeyCode.A, this.getClass().toString());
 
         InputUtil.add(()-> {
             if (!playerMap.containsKey(id)) return;
             double newX = playerMap.get(id).getX() + MOVE_SPEED;
-            if (newX + PLAYER_SIZE <= FXGL.getAppWidth()) {
+            if (newX + player_width <= FXGL.getAppWidth()) {
                 playerMap.get(id).setX(newX);
+                playerMap.get(id).getComponent(PlayerComponent.class).moveRight();
             }
         }, KeyCode.D, this.getClass().toString());
+
+        Runnable stopComponent = ()-> {
+            if (!playerMap.containsKey(id)) return;
+            playerMap.get(id).getComponent(PlayerComponent.class).stop();
+        };
+        InputUtil.addEnd(stopComponent, KeyCode.W, this.getClass().toString());
+        InputUtil.addEnd(stopComponent, KeyCode.S, this.getClass().toString());
+        InputUtil.addEnd(stopComponent, KeyCode.A, this.getClass().toString());
+        InputUtil.addEnd(stopComponent, KeyCode.D, this.getClass().toString());
 
         InputUtil.addEnd(()-> {
             DialogUtil.input("请输入聊天内容", msg -> {
@@ -158,8 +171,9 @@ public class GameScene extends Scene {
                 lastX = x;
                 lastY = y;
                 Bundle bundle = new Bundle(MOVE);
-                bundle.put(X, x);
-                bundle.put(Y, y);
+                bundle.put(BundleKey.X, x);
+                bundle.put(BundleKey.Y, y);
+                bundle.put(BundleKey.DIRECTION, playerMap.get(id).getComponent(PlayerComponent.class).getDirection());
                 clientConnection.send(bundle);
             }
         }
@@ -201,8 +215,9 @@ public class GameScene extends Scene {
         if (message.getName().equals(BundleKey.MOVE)) {
             int pid = message.get(BundleKey.ID);
             if (pid != id && playerMap.containsKey(pid)) {
-                playerMap.get(pid).setX(message.get(BundleKey.X));
-                playerMap.get(pid).setY(message.get(BundleKey.Y));
+                PlayerComponent playerComponent = playerMap.get(pid).getComponent(PlayerComponent.class);
+                playerComponent.setDirection(message.get(BundleKey.DIRECTION));
+                playerComponent.setDestination(message.get(BundleKey.X), message.get(BundleKey.Y));
             }
         } else if (message.getName().equals(BundleKey.ID)) {
             id = message.get(BundleKey.ID);
@@ -233,18 +248,16 @@ public class GameScene extends Scene {
                     nameText.setFill(Color.BLUE);
                     nameText.setFont(Font.font(16));
                     nameText.setTranslateY(-10);
-                    nameText.setTranslateX(PLAYER_SIZE / 2 - nameText.getBoundsInLocal().getWidth() / 2);
-
-                    Text chatText = new Text("");
+                    nameText.setTranslateX((double) player_width / 2 - nameText.getBoundsInLocal().getWidth() / 2);
+                    Text chatText = new Text();
                     chatText.setFill(Color.GREEN);
                     chatText.setFont(Font.font(18));
                     chatText.setTranslateY(25);
-                    chatText.setTranslateX(PLAYER_SIZE);
-
+                    chatText.setTranslateX(player_width);
                     playerMap.put(pid,
                             FXGL.entityBuilder()
                                     .at(150, 150)
-                                    .view("player.png")
+                                    .with(new PlayerComponent(id == pid ? "p.png" : "p2.png"))
                                     .view(nameText)
                                     .view(chatText)
                                     .buildAndAttach());

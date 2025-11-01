@@ -5,6 +5,7 @@ public class BundleKey {
     public static String MOVE = "move";
     public static String X = "x";
     public static String Y = "y";
+    public static String DIRECTION = "direction";
     public static String PLAYERS = "players";
     public static String SAVE = "save";
     public static String PLAYER_NAME = "playerName";

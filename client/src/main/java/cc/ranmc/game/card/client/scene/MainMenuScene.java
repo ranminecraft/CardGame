@@ -28,7 +28,6 @@ import java.net.URI;
 import static cc.ranmc.game.card.common.constant.GameInfo.SAVE_FILE_NAME;
 import static cc.ranmc.game.card.common.constant.GameInfo.VERSION;
 import static cc.ranmc.game.card.common.constant.HttpPath.INFO_PATH;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getDialogService;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getUIFactoryService;
 
