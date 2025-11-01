@@ -2,6 +2,7 @@ package cc.ranmc.game.card.server.network;
 
 import cc.ranmc.game.card.common.bean.Player;
 import cc.ranmc.game.card.common.constant.BundleKey;
+import cc.ranmc.game.card.common.constant.GameInfo;
 import cc.ranmc.game.card.common.constant.JsonKey;
 import cc.ranmc.game.card.server.Main;
 import cc.ranmc.game.card.server.constant.SQLKey;
@@ -54,29 +55,38 @@ public class GameServer {
             Main.getLogger().info("id{} 玩家名{} 说 {}",
                     player.getId(), player.getPlayerName(), message.get(BundleKey.CHAT));
             server.broadcast(message);
-        } else if (message.getName().equals(BundleKey.TOKEN)) {
+        } else if (message.getName().equals(BundleKey.JOIN)) {
             String token = message.get(BundleKey.TOKEN);
             if (!JwtTokenUtil.validate(token)) {
-                connection.terminate();
-                Main.getLogger().warn("连接断开 Token 过期");
+                Bundle bundle = new Bundle(BundleKey.DISCONNECT);
+                bundle.put(BundleKey.DISCONNECT, "登陆已过期，请重新登录");
+                connection.send(bundle);
                 return;
             }
             String email;
             try {
                 email = JwtTokenUtil.getEmail(token);
             } catch (Exception e) {
-                connection.terminate();
-                Main.getLogger().warn("连接断开 无法获取邮箱");
+                Bundle bundle = new Bundle(BundleKey.DISCONNECT);
+                bundle.put(BundleKey.DISCONNECT, "登陆信息错误，请重新登录");
+                connection.send(bundle);
                 return;
             }
             SQLRow sqlRow = Main.getData().selectRow(SQLKey.PLAYER,
                     new SQLFilter().where(SQLKey.EMAIL, email));
             for (Connection<Bundle> c : playerMap.keySet()) {
                 if (playerMap.get(c).getPlayerName().equals(sqlRow.getString(SQLKey.NAME))) {
-                    c.terminate();
-                    Main.getLogger().warn("连接断开 玩家在别处连接");
+                    Bundle bundle = new Bundle(BundleKey.DISCONNECT);
+                    bundle.put(BundleKey.DISCONNECT, "玩家在别处连接");
+                    c.send(bundle);
                     break;
                 }
+            }
+            if (!message.get(BundleKey.VERSION).equals(GameInfo.VERSION)) {
+                Bundle bundle = new Bundle(BundleKey.DISCONNECT);
+                bundle.put(BundleKey.DISCONNECT, "版本过旧，请先更新游戏");
+                connection.send(bundle);
+                return;
             }
             Player player = new Player();
             player.setId(sqlRow.getInt(SQLKey.ID));

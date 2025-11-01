@@ -3,6 +3,7 @@ package cc.ranmc.game.card.client.scene;
 import cc.ranmc.game.card.client.Main;
 import cc.ranmc.game.card.client.util.InputUtil;
 import cc.ranmc.game.card.common.constant.BundleKey;
+import cc.ranmc.game.card.common.constant.GameInfo;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.almasb.fxgl.core.serialization.Bundle;
@@ -29,6 +30,7 @@ import static cc.ranmc.game.card.common.constant.BundleKey.X;
 import static cc.ranmc.game.card.common.constant.BundleKey.Y;
 import static cc.ranmc.game.card.common.constant.GameInfo.ADDRESS;
 import static cc.ranmc.game.card.common.constant.GameInfo.TCP_PORT;
+import static cc.ranmc.game.card.common.constant.GameInfo.VERSION;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getDialogService;
 
 public class GameScene extends Scene {
@@ -165,7 +167,7 @@ public class GameScene extends Scene {
         client.setOnConnected(connection -> {
             clientConnection = connection;
             helpText.setText("WSAD 移动  Esc 返回主菜单  Enter 聊天  F3 帧率显示");
-            Bundle bundle = new Bundle(BundleKey.TOKEN);
+            Bundle bundle = new Bundle(BundleKey.JOIN);
 
             String token = Main.getSave().get(BundleKey.TOKEN);
             if (token == null || token.isEmpty()) {
@@ -173,6 +175,7 @@ public class GameScene extends Scene {
                 return;
             }
             bundle.put(BundleKey.TOKEN, token);
+            bundle.put(BundleKey.VERSION, GameInfo.VERSION);
             clientConnection.send(bundle);
 
             FXGL.getGameTimer().runAtInterval(this::updateData, Duration.millis(10));
@@ -198,6 +201,10 @@ public class GameScene extends Scene {
             id = message.get(BundleKey.ID);
         } else if (message.getName().equals(BundleKey.PONG)) {
             latency = System.currentTimeMillis() - lastPingTime;
+        } else if (message.getName().equals(BundleKey.DISCONNECT)) {
+            FXGL.getDialogService().showMessageBox(message.get(BundleKey.DISCONNECT));
+            client.disconnect();
+            Main.changeScene(new MainMenuScene());
         } else if (message.getName().equals(BundleKey.CHAT)) {
             System.out.println(message);
             int pid = message.get(BundleKey.ID);
