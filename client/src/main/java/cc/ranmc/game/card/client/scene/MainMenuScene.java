@@ -77,6 +77,17 @@ public class MainMenuScene extends Scene {
             Main.changeScene(new LoginScene());
         });
 
+        Button fullscreenBtn = new Button("开启全屏");
+        fullscreenBtn.setOnAction(e -> {
+            boolean isFullScreen = FXGL.getPrimaryStage().isFullScreen();
+            FXGL.getPrimaryStage().setFullScreen(!isFullScreen);
+            fullscreenBtn.setText(isFullScreen ? "开启全屏" : "退出全屏");
+        });
+        fullscreenBtn.setTranslateX(434);
+        fullscreenBtn.setTranslateY(375);
+        fullscreenBtn.getStyleClass().add("small-button");
+        FXGL.getGameScene().addUINode(fullscreenBtn);
+
         InputUtil.addEnd(()-> {
             GameInfo.TCP_PORT = 2261;
             GameInfo.HTTP_PORT = 2262;

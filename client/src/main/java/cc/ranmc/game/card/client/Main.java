@@ -45,7 +45,7 @@ public class Main extends GameApplication {
         settings.setScaleAffectedOnResize(true);
         settings.setPreserveResizeRatio(true);
         settings.setManualResizeEnabled(true);
-
+        settings.setFullScreenAllowed(true);
     }
 
     @Override

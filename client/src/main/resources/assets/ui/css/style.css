@@ -27,10 +27,10 @@
     -fx-pref-height: 38px;
     -fx-font-size: 16px;
 }
-.mode-button:hover {
+.small-button:hover {
     -fx-opacity: 1;
 }
-.mode-button:pressed {
+.small-button:pressed {
     -fx-background-image: url("button4.png");
     -fx-opacity: 1;
 }
