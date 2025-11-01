@@ -199,7 +199,7 @@ public class GameScene extends Scene {
             bundle.put(BundleKey.VERSION, GameInfo.VERSION);
             clientConnection.send(bundle);
 
-            FXGL.getGameTimer().runAtInterval(this::updateData, Duration.millis(10));
+            FXGL.getGameTimer().runAtInterval(this::updateData, Duration.millis(20));
 
             connection.addMessageHandlerFX((_, message) ->
                     handleMessage(message));
