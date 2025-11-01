@@ -122,19 +122,20 @@ public class GameScene extends Scene {
             }
         }, KeyCode.D, this.getClass().toString());
 
-        InputUtil.add(()-> {
+        InputUtil.addEnd(()-> {
             DialogUtil.input("请输入聊天内容", msg -> {
                 if (msg.length() > 20) {
                     DialogUtil.show("聊天内容过长");
                     return;
                 }
+                if (msg.isEmpty()) return;
                 Bundle bundle = new Bundle(CHAT);
                 bundle.put(CHAT, msg);
                 clientConnection.send(bundle);
             });
         }, KeyCode.ENTER, this.getClass().toString());
 
-        InputUtil.add(()-> {
+        InputUtil.addEnd(()-> {
             id = 0;
             playerMap.clear();
             client.disconnect();
