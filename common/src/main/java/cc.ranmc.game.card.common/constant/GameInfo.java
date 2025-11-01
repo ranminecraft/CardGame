@@ -1,7 +1,7 @@
 package cc.ranmc.game.card.common.constant;
 
 public class GameInfo {
-    public static final String NAME = "卡牌游戏";
+    public static final String NAME = "小然游戏";
     public static final String VERSION = "Alpha 0.1";
     public static final String AUTHOR = "Ranica";
     public static int TCP_PORT = 14226;

@@ -17,6 +17,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -226,6 +227,7 @@ public class GameScene extends Scene {
                     nameText.setFill(Color.BLUE);
                     nameText.setFont(Font.font(16));
                     nameText.setTranslateY(-10);
+                    nameText.setTranslateX(PLAYER_SIZE / 2 - nameText.getBoundsInLocal().getWidth() / 2);
 
                     Text chatText = new Text("");
                     chatText.setFill(Color.GREEN);

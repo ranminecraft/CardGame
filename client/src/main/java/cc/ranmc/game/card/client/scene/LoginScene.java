@@ -5,6 +5,7 @@ import cc.ranmc.game.card.client.util.ApiUtil;
 import cc.ranmc.game.card.client.util.HashUtil;
 import cc.ranmc.game.card.client.util.HttpUtil;
 import cc.ranmc.game.card.common.constant.BundleKey;
+import cc.ranmc.game.card.common.constant.GameInfo;
 import cc.ranmc.game.card.common.constant.HttpResponse;
 import cc.ranmc.game.card.common.constant.JsonKey;
 import com.alibaba.fastjson2.JSONObject;
@@ -16,8 +17,11 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import static cc.ranmc.game.card.common.constant.GameInfo.NAME;
@@ -44,25 +48,35 @@ public class LoginScene extends Scene {
 
         TextField playerNameField = new TextField();
         playerNameField.setPromptText("玩家名");
-
+        playerNameField.setFont(Font.font(15));
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("密码");
+        passwordField .setFont(Font.font(15));
 
         // 按钮
         Button loginButton = new Button("登录");
+        loginButton.getStyleClass().add("small-button");
         Button registerButton = new Button("注册");
+        registerButton.getStyleClass().add("small-button");
         Button forgotButton = new Button("忘记密码");
+        forgotButton.getStyleClass().add("small-button");
 
-        Text helpText = new Text("急招美术！！");
-        helpText.setFont(Font.font(40));
+        Text titleText = new Text(GameInfo.NAME);
+        titleText.setFill(Color.WHITE);
+        titleText.setFont(Font.font(GameInfo.FONT, FontWeight.BOLD, 45));
+        DropShadow ds = new DropShadow();
+        ds.setOffsetX(3);
+        ds.setOffsetY(3);
+        ds.setColor(Color.color(0, 0, 0, 0.7));
+        titleText.setEffect(ds);
 
-        String name = Main.getSave().get(NAME);
+        String name = Main.getSave().get(BundleKey.NAME);
         if (name != null && !name.isEmpty()) playerNameField.setText(name);
 
-        VBox box = new VBox(10, helpText, playerNameField, passwordField, loginButton, registerButton, forgotButton);
+        VBox box = new VBox(20, titleText, playerNameField, passwordField, loginButton, registerButton, forgotButton);
         box.setAlignment(Pos.CENTER);
-        box.setTranslateX(380);
-        box.setTranslateY(180);
+        box.setTranslateX(200);
+        box.setTranslateY(120);
 
         FXGL.getGameScene().addUINode(box);
 

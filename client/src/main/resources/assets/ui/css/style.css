@@ -16,7 +16,7 @@
     -fx-background-image: url("button2.png");
     -fx-opacity: 1;
 }
-.mode-button {
+.small-button {
     -fx-opacity: 0.9;
     -fx-background-image: url("button3.png");
     -fx-alignment: center;

@@ -68,7 +68,7 @@ public class MainMenuScene extends Scene {
         Button logoutBtn = new Button("退出登陆");
         logoutBtn.setTranslateX(434);
         logoutBtn.setTranslateY(325);
-        logoutBtn.getStyleClass().add("mode-button");
+        logoutBtn.getStyleClass().add("small-button");
         FXGL.getGameScene().addUINode(logoutBtn);
         logoutBtn.setOnAction(_ -> {
             Main.getSave().put(BundleKey.TOKEN, "");
