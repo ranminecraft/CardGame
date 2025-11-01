@@ -85,7 +85,6 @@ public class Main extends GameApplication {
         FXGL.getGameTimer().clear();
         scene = newScene;
         scene.onCreate();
-        DialogUtil.changeScene();
     }
 
 }

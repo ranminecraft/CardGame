@@ -77,7 +77,7 @@ public class MainMenuScene extends Scene {
             Main.changeScene(new LoginScene());
         });
 
-        InputUtil.add(()-> {
+        InputUtil.addEnd(()-> {
             GameInfo.TCP_PORT = 2261;
             GameInfo.HTTP_PORT = 2262;
             GameInfo.ADDRESS = "localhost";

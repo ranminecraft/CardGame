@@ -18,7 +18,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -32,8 +31,6 @@ import static cc.ranmc.game.card.common.constant.BundleKey.X;
 import static cc.ranmc.game.card.common.constant.BundleKey.Y;
 import static cc.ranmc.game.card.common.constant.GameInfo.ADDRESS;
 import static cc.ranmc.game.card.common.constant.GameInfo.TCP_PORT;
-import static cc.ranmc.game.card.common.constant.GameInfo.VERSION;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getDialogService;
 
 public class GameScene extends Scene {
 
@@ -49,6 +46,11 @@ public class GameScene extends Scene {
     private static long lastPingTime;
     private double lastX = 0;
     private double lastY = 0;
+
+    @Override
+    public void onDestroy() {
+        if (client != null) client.disconnect();
+    }
 
     @Override
     public void onCreate() {
@@ -79,8 +81,10 @@ public class GameScene extends Scene {
         }, Duration.seconds(1));
 
         FXGL.getGameTimer().runAtInterval(() -> {
-            clientConnection.send(new Bundle(BundleKey.PING));
-            lastPingTime = System.currentTimeMillis();
+            if (clientConnection != null && !clientConnection.isConnected()) {
+                clientConnection.send(new Bundle(BundleKey.PING));
+                lastPingTime = System.currentTimeMillis();
+            }
         }, Duration.seconds(10));
 
         InputUtil.addEnd(()-> statusText.setVisible(!statusText.isVisible()),
@@ -119,8 +123,8 @@ public class GameScene extends Scene {
         }, KeyCode.D, this.getClass().toString());
 
         InputUtil.add(()-> {
-            getDialogService().showInputBox("请输入聊天内容", msg -> {
-                if (msg.length() > 16) {
+            DialogUtil.input("请输入聊天内容", msg -> {
+                if (msg.length() > 20) {
                     DialogUtil.show("聊天内容过长");
                     return;
                 }
@@ -187,8 +191,8 @@ public class GameScene extends Scene {
         });
         client.connectTask()
                 .onFailure(error -> {
-                    DialogUtil.show("无法连接服务器\n" + error.getMessage());
                     Main.changeScene(new MainMenuScene());
+                    DialogUtil.show("无法连接服务器\n" + error.getMessage());
                 }).run();
     }
 
@@ -204,9 +208,9 @@ public class GameScene extends Scene {
         } else if (message.getName().equals(BundleKey.PONG)) {
             latency = System.currentTimeMillis() - lastPingTime;
         } else if (message.getName().equals(BundleKey.DISCONNECT)) {
-            DialogUtil.show(message.get(BundleKey.DISCONNECT));
             client.disconnect();
             Main.changeScene(new MainMenuScene());
+            DialogUtil.show(message.get(BundleKey.DISCONNECT));
         } else if (message.getName().equals(BundleKey.CHAT)) {
             System.out.println(message);
             int pid = message.get(BundleKey.ID);

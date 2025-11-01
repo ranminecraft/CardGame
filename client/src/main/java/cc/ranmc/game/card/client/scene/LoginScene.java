@@ -119,7 +119,7 @@ public class LoginScene extends Scene {
                 DialogUtil.show("密码长度必须大于6位");
                 return;
             }
-            getDialogService().showInputBox("输入您的邮箱", email -> {
+            DialogUtil.input("输入您的邮箱", email -> {
                 String playerName = playerNameField.getText();
                 String password = HashUtil.sha1(passwordField.getText());
                 JSONObject json = new JSONObject();
@@ -132,15 +132,17 @@ public class LoginScene extends Scene {
                         return;
                     }
                     JSONObject bodyJson = JSONObject.parseObject(body);
+                    System.out.println(body + " 1");
                     int code = bodyJson.getIntValue(JsonKey.CODE, 0);
                     if (code != HttpResponse.SC_OK && code != HttpResponse.SC_UNAUTHORIZED) {
                         DialogUtil.show(bodyJson.getString(JsonKey.MSG));
                         return;
                     }
-                    getDialogService().showInputBox("请检查邮箱并输入验证码", key -> {
+                    DialogUtil.input("请检查邮箱并输入验证码", key -> {
                         JSONObject keyJson = new JSONObject();
                         keyJson.put(JsonKey.KEY, key);
                         HttpUtil.post(ApiUtil.get(REGISTER_PATH), keyJson.toString(), regRepBody -> {
+                            System.out.println(regRepBody + " 2");
                             if (regRepBody.isEmpty()) {
                                 DialogUtil.show("连接服务器失败");
                                 return;
@@ -168,7 +170,7 @@ public class LoginScene extends Scene {
                 DialogUtil.show("密码长度必须大于6位");
                 return;
             }
-            getDialogService().showInputBox("输入您的邮箱", email -> {
+            DialogUtil.input("输入您的邮箱", email -> {
                 String playerName = playerNameField.getText();
                 String password = HashUtil.sha1(passwordField.getText());
                 JSONObject json = new JSONObject();
@@ -183,7 +185,7 @@ public class LoginScene extends Scene {
                         DialogUtil.show(bodyJson.getString(JsonKey.MSG));
                         return;
                     }
-                    getDialogService().showInputBox("请检查邮箱并输入验证码", key -> {
+                    DialogUtil.input("请检查邮箱并输入验证码", key -> {
                         JSONObject keyJson = new JSONObject();
                         keyJson.put(JsonKey.KEY, key);
                         HttpUtil.post(ApiUtil.get(FORGET_PATH), keyJson.toString(), regRepBody -> {
