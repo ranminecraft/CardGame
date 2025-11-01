@@ -77,11 +77,10 @@ public class MainMenuScene extends Scene {
             Main.changeScene(new LoginScene());
         });
 
-        Button fullscreenBtn = new Button("开启全屏");
+        Button fullscreenBtn = new Button("切换全屏");
         fullscreenBtn.setOnAction(e -> {
             boolean isFullScreen = FXGL.getPrimaryStage().isFullScreen();
             FXGL.getPrimaryStage().setFullScreen(!isFullScreen);
-            fullscreenBtn.setText(isFullScreen ? "开启全屏" : "退出全屏");
         });
         fullscreenBtn.setTranslateX(434);
         fullscreenBtn.setTranslateY(375);
