@@ -2,6 +2,7 @@ package cc.ranmc.game.card.client.scene;
 
 import cc.ranmc.game.card.client.Main;
 import cc.ranmc.game.card.client.util.ApiUtil;
+import cc.ranmc.game.card.client.util.DialogUtil;
 import cc.ranmc.game.card.client.util.HashUtil;
 import cc.ranmc.game.card.client.util.HttpUtil;
 import cc.ranmc.game.card.common.constant.BundleKey;
@@ -85,7 +86,7 @@ public class LoginScene extends Scene {
             if (passwordField.getText() == null ||
                     passwordField.getText().isEmpty() ||
                     passwordField.getText().length() < 6) {
-                getDialogService().showMessageBox("密码长度必须大于6位");
+                DialogUtil.show("密码长度必须大于6位");
                 return;
             }
             String password = HashUtil.sha1(passwordField.getText());
@@ -95,7 +96,7 @@ public class LoginScene extends Scene {
 
             HttpUtil.post(ApiUtil.get(LOGIN_PATH), json.toString(), body -> {
                 if (body.isEmpty()) {
-                    getDialogService().showMessageBox("连接服务器失败");
+                    DialogUtil.show("连接服务器失败");
                     return;
                 }
                 JSONObject bodyJson = JSONObject.parseObject(body);
@@ -106,7 +107,7 @@ public class LoginScene extends Scene {
                     FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
                     Main.changeScene(new MainMenuScene());
                 } else {
-                    getDialogService().showMessageBox(bodyJson.getString(JsonKey.MSG));
+                    DialogUtil.show(bodyJson.getString(JsonKey.MSG));
                 }
             });
         });
@@ -115,7 +116,7 @@ public class LoginScene extends Scene {
             if (passwordField.getText() == null ||
                     passwordField.getText().isEmpty() ||
                     passwordField.getText().length() < 6) {
-                getDialogService().showMessageBox("密码长度必须大于6位");
+                DialogUtil.show("密码长度必须大于6位");
                 return;
             }
             getDialogService().showInputBox("输入您的邮箱", email -> {
@@ -127,13 +128,13 @@ public class LoginScene extends Scene {
                 json.put(JsonKey.PASSWORD, password);
                 HttpUtil.post(ApiUtil.get(PRE_REGISTER_PATH), json.toString(), body -> {
                     if (body.isEmpty()) {
-                        getDialogService().showMessageBox("连接服务器失败");
+                        DialogUtil.show("连接服务器失败");
                         return;
                     }
                     JSONObject bodyJson = JSONObject.parseObject(body);
                     int code = bodyJson.getIntValue(JsonKey.CODE, 0);
                     if (code != HttpResponse.SC_OK && code != HttpResponse.SC_UNAUTHORIZED) {
-                        getDialogService().showMessageBox(bodyJson.getString(JsonKey.MSG));
+                        DialogUtil.show(bodyJson.getString(JsonKey.MSG));
                         return;
                     }
                     getDialogService().showInputBox("请检查邮箱并输入验证码", key -> {
@@ -141,13 +142,13 @@ public class LoginScene extends Scene {
                         keyJson.put(JsonKey.KEY, key);
                         HttpUtil.post(ApiUtil.get(REGISTER_PATH), keyJson.toString(), regRepBody -> {
                             if (regRepBody.isEmpty()) {
-                                getDialogService().showMessageBox("连接服务器失败");
+                                DialogUtil.show("连接服务器失败");
                                 return;
                             }
                             JSONObject regRepJson = JSONObject.parseObject(regRepBody);
                             int regRepCode = regRepJson.getIntValue(JsonKey.CODE, 0);;
                             if (regRepCode != HttpResponse.SC_OK) {
-                                getDialogService().showMessageBox(regRepJson.getString(JsonKey.MSG));
+                                DialogUtil.show(regRepJson.getString(JsonKey.MSG));
                                 return;
                             }
                             Main.getSave().put(BundleKey.TOKEN, regRepJson.getString(JsonKey.TOKEN));
@@ -164,7 +165,7 @@ public class LoginScene extends Scene {
             if (passwordField.getText() == null ||
                     passwordField.getText().isEmpty() ||
                     passwordField.getText().length() < 6) {
-                getDialogService().showMessageBox("密码长度必须大于6位");
+                DialogUtil.show("密码长度必须大于6位");
                 return;
             }
             getDialogService().showInputBox("输入您的邮箱", email -> {
@@ -179,7 +180,7 @@ public class LoginScene extends Scene {
                     JSONObject bodyJson = JSONObject.parseObject(body);
                     int code = bodyJson.getIntValue(JsonKey.CODE, 0);
                     if (code != HttpResponse.SC_OK && code != HttpResponse.SC_UNAUTHORIZED) {
-                        getDialogService().showMessageBox(bodyJson.getString(JsonKey.MSG));
+                        DialogUtil.show(bodyJson.getString(JsonKey.MSG));
                         return;
                     }
                     getDialogService().showInputBox("请检查邮箱并输入验证码", key -> {
@@ -189,7 +190,7 @@ public class LoginScene extends Scene {
                             JSONObject regRepJson = JSONObject.parseObject(regRepBody);
                             int regRepCode = regRepJson.getIntValue(JsonKey.CODE, 0);;
                             if (regRepCode != HttpResponse.SC_OK) {
-                                getDialogService().showMessageBox(regRepJson.getString(JsonKey.MSG));
+                                DialogUtil.show(regRepJson.getString(JsonKey.MSG));
                             }
                             Main.getSave().put(BundleKey.TOKEN, regRepJson.getString(JsonKey.TOKEN));
                             Main.getSave().put(BundleKey.NAME, playerName);

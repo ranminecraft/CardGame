@@ -7,7 +7,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 import static cc.ranmc.game.card.common.constant.GameInfo.HEIGHT;
 import static cc.ranmc.game.card.common.constant.GameInfo.WIDTH;
@@ -33,5 +32,4 @@ public class LoadingUtil {
     public static void end() {
         Platform.runLater(() -> FXGL.getGameScene().removeUINode(loadingPane));
     }
-
 }

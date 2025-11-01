@@ -1,6 +1,7 @@
 package cc.ranmc.game.card.client;
 
 import cc.ranmc.game.card.client.scene.PreLoadingScene;
+import cc.ranmc.game.card.client.util.DialogUtil;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
@@ -84,6 +85,7 @@ public class Main extends GameApplication {
         FXGL.getGameTimer().clear();
         scene = newScene;
         scene.onCreate();
+        DialogUtil.changeScene();
     }
 
 }

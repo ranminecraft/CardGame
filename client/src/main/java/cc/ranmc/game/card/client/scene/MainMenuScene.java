@@ -2,6 +2,7 @@ package cc.ranmc.game.card.client.scene;
 
 import cc.ranmc.game.card.client.Main;
 import cc.ranmc.game.card.client.util.ApiUtil;
+import cc.ranmc.game.card.client.util.DialogUtil;
 import cc.ranmc.game.card.client.util.HttpUtil;
 import cc.ranmc.game.card.client.util.InputUtil;
 import cc.ranmc.game.card.common.constant.BundleKey;
@@ -80,7 +81,7 @@ public class MainMenuScene extends Scene {
             GameInfo.TCP_PORT = 2261;
             GameInfo.HTTP_PORT = 2262;
             GameInfo.ADDRESS = "localhost";
-            getDialogService().showMessageBox("已开启调试模式");
+            DialogUtil.show("已开启调试模式");
         }, KeyCode.F12, this.getClass().toString());
 
         Text versionText = getUIFactoryService().newText("当前游戏版本：" + VERSION, Color.WHITE, 13);
@@ -92,7 +93,7 @@ public class MainMenuScene extends Scene {
         json.put(JsonKey.TOKEN, Main.getSave().get(BundleKey.TOKEN));
         HttpUtil.post(ApiUtil.get(INFO_PATH), json.toString(), body -> {
             if (body.isEmpty()) {
-                getDialogService().showMessageBox("连接服务器失败");
+                DialogUtil.show("连接服务器失败");
                 return;
             }
             JSONObject bodyJson = JSONObject.parseObject(body);
@@ -103,10 +104,10 @@ public class MainMenuScene extends Scene {
                 moneyText.setText("金币 " + money);
                 nameText.setText("来玩吧，" + name + "！");
             } else if (code == HttpResponse.SC_UNAUTHORIZED) {
-                getDialogService().showMessageBox("登陆已过期");
+                DialogUtil.show("登陆已过期");
                 Main.changeScene(new LoginScene());
             } else {
-                getDialogService().showMessageBox(bodyJson.getString(JsonKey.MSG));
+                DialogUtil.show(bodyJson.getString(JsonKey.MSG));
             }
         });
     }

@@ -1,6 +1,7 @@
 package cc.ranmc.game.card.client.scene;
 
 import cc.ranmc.game.card.client.Main;
+import cc.ranmc.game.card.client.util.DialogUtil;
 import cc.ranmc.game.card.client.util.InputUtil;
 import cc.ranmc.game.card.common.constant.BundleKey;
 import cc.ranmc.game.card.common.constant.GameInfo;
@@ -120,7 +121,7 @@ public class GameScene extends Scene {
         InputUtil.add(()-> {
             getDialogService().showInputBox("请输入聊天内容", msg -> {
                 if (msg.length() > 16) {
-                    getDialogService().showMessageBox("聊天内容过长");
+                    DialogUtil.show("聊天内容过长");
                     return;
                 }
                 Bundle bundle = new Bundle(CHAT);
@@ -159,7 +160,7 @@ public class GameScene extends Scene {
         }
         if (clientConnection != null && !clientConnection.isConnected()) {
             Main.changeScene(new MainMenuScene());
-            getDialogService().showMessageBox("与服务器断开连接");
+            DialogUtil.show("与服务器断开连接");
         }
     }
 
@@ -186,7 +187,7 @@ public class GameScene extends Scene {
         });
         client.connectTask()
                 .onFailure(error -> {
-                    FXGL.getDialogService().showMessageBox("无法连接服务器\n" + error.getMessage());
+                    DialogUtil.show("无法连接服务器\n" + error.getMessage());
                     Main.changeScene(new MainMenuScene());
                 }).run();
     }
@@ -203,7 +204,7 @@ public class GameScene extends Scene {
         } else if (message.getName().equals(BundleKey.PONG)) {
             latency = System.currentTimeMillis() - lastPingTime;
         } else if (message.getName().equals(BundleKey.DISCONNECT)) {
-            FXGL.getDialogService().showMessageBox(message.get(BundleKey.DISCONNECT));
+            DialogUtil.show(message.get(BundleKey.DISCONNECT));
             client.disconnect();
             Main.changeScene(new MainMenuScene());
         } else if (message.getName().equals(BundleKey.CHAT)) {
