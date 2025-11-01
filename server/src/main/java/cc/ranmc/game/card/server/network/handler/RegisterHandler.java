@@ -30,7 +30,7 @@ public class RegisterHandler {
             context.result(json.toString());
             return;
         }
-        String key = parms.getString(JsonKey.KEY);
+        String key = parms.getString(JsonKey.KEY).toUpperCase();
         if (PRE_REGISTER_MAP.containsKey(key)) {
             JSONObject playerParms = PRE_REGISTER_MAP.get(key);
             SQLRow sqlRow = new SQLRow();

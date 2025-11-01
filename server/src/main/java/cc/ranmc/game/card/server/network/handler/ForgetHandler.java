@@ -29,7 +29,7 @@ public class ForgetHandler {
             context.result(json.toString());
             return;
         }
-        String key = parms.getString(JsonKey.KEY);
+        String key = parms.getString(JsonKey.KEY).toUpperCase();
         if (PRE_FORGET_MAP.containsKey(key)) {
             JSONObject playerParms = PRE_FORGET_MAP.get(key);
             Main.getData().update(SQLKey.PLAYER, new SQLFilter()

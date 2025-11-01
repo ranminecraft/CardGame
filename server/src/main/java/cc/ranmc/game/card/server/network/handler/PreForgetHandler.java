@@ -24,6 +24,7 @@ import static cc.ranmc.game.card.common.constant.JsonKey.CODE;
 import static cc.ranmc.game.card.common.constant.JsonKey.MSG;
 import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_OK;
+import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 public class PreForgetHandler {
     public static final Map<String, JSONObject> PRE_FORGET_MAP = new HashMap<>();
@@ -80,7 +81,7 @@ public class PreForgetHandler {
         for (String key : PRE_FORGET_MAP.keySet()) {
             if (PRE_FORGET_MAP.get(key).getString(JsonKey.EMAIL)
                     .equals(parms.getString(JsonKey.EMAIL))) {
-                json.put(CODE, SC_BAD_REQUEST);
+                json.put(CODE, SC_UNAUTHORIZED);
                 json.put(MSG, "等待验证中，请检查邮件");
                 context.result(json.toString());
                 return;

@@ -114,7 +114,7 @@ public class LoginScene extends Scene {
                     String body = HttpUtil.post(ApiUtil.get(PRE_REGISTER_PATH), json.toString());
                     json = JSONObject.parseObject(body);
                     int code = json.getIntValue(JsonKey.CODE, 0);
-                    if (code == HttpResponse.SC_OK) {
+                    if (code == HttpResponse.SC_OK || code == HttpResponse.SC_UNAUTHORIZED) {
                         getDialogService().showInputBox("请检查邮箱并输入验证码", key -> {
                             JSONObject keyJson = new JSONObject();
                             keyJson.put(JsonKey.KEY, key);
@@ -130,7 +130,6 @@ public class LoginScene extends Scene {
                                 getDialogService().showMessageBox(regRepJson.getString(JsonKey.MSG));
                             }
                         });
-
                     } else {
                         getDialogService().showMessageBox(json.getString(JsonKey.MSG));
                     }
@@ -158,7 +157,7 @@ public class LoginScene extends Scene {
                     String body = HttpUtil.post(ApiUtil.get(PRE_FORGET_PATH), json.toString());
                     json = JSONObject.parseObject(body);
                     int code = json.getIntValue(JsonKey.CODE, 0);
-                    if (code == HttpResponse.SC_OK) {
+                    if (code == HttpResponse.SC_OK || code == HttpResponse.SC_UNAUTHORIZED) {
                         getDialogService().showInputBox("请检查邮箱并输入验证码", key -> {
                             JSONObject keyJson = new JSONObject();
                             keyJson.put(JsonKey.KEY, key);
