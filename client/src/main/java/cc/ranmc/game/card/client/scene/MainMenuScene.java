@@ -13,11 +13,17 @@ import com.alibaba.fastjson2.JSONObject;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.scene.Scene;
 import com.almasb.fxgl.texture.Texture;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+
+import java.awt.*;
+import java.net.URI;
 
 import static cc.ranmc.game.card.common.constant.GameInfo.SAVE_FILE_NAME;
 import static cc.ranmc.game.card.common.constant.GameInfo.VERSION;
@@ -44,33 +50,18 @@ public class MainMenuScene extends Scene {
 
         Texture author = FXGL.getAssetLoader().loadTexture("author.png");
         author.setFitWidth(100);
-        author.setFitHeight(129);
+        author.setFitHeight(130);
         author.setTranslateX(840);
-        author.setTranslateY(401);
+        author.setTranslateY(400);
         FXGL.getGameScene().addUINode(author);
 
         Button playBtn = new Button("开始游戏");
-        playBtn.setTranslateX(425);
-        playBtn.setTranslateY(210);
         playBtn.getStyleClass().add("play-button");
         playBtn.setOnAction(_ -> Main.changeScene(new GameScene()));
         FXGL.getGameScene().addUINode(playBtn);
 
-        Text moneyText = getUIFactoryService().newText("", Color.GOLD, 22);
-        moneyText.setTranslateX(12);
-        moneyText.setTranslateY(460);
-        FXGL.getGameScene().addUINode(moneyText);
-
-        Text nameText = getUIFactoryService().newText("", Color.WHITE, 30);
-        nameText.setTranslateX(12);
-        nameText.setTranslateY(495);
-        FXGL.getGameScene().addUINode(nameText);
-
         Button logoutBtn = new Button("退出登陆");
-        logoutBtn.setTranslateX(434);
-        logoutBtn.setTranslateY(325);
         logoutBtn.getStyleClass().add("small-button");
-        FXGL.getGameScene().addUINode(logoutBtn);
         logoutBtn.setOnAction(_ -> {
             Main.getSave().put(BundleKey.TOKEN, "");
             FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
@@ -82,10 +73,34 @@ public class MainMenuScene extends Scene {
             boolean isFullScreen = FXGL.getPrimaryStage().isFullScreen();
             FXGL.getPrimaryStage().setFullScreen(!isFullScreen);
         });
-        fullscreenBtn.setTranslateX(434);
-        fullscreenBtn.setTranslateY(375);
         fullscreenBtn.getStyleClass().add("small-button");
-        FXGL.getGameScene().addUINode(fullscreenBtn);
+
+        VBox btnBox = new VBox(10, playBtn, fullscreenBtn, logoutBtn);
+        btnBox.setAlignment(Pos.CENTER);
+        javafx.application.Platform.runLater(() -> {
+            btnBox.setTranslateX((GameInfo.WIDTH - btnBox.getWidth()) / 2);
+            btnBox.setTranslateY((GameInfo.HEIGHT - btnBox.getHeight()) / 2);
+        });
+        FXGL.getGameScene().addUINode(btnBox);
+
+        Text moneyText = getUIFactoryService().newText("", Color.GOLD, 20);
+        Text nameText = getUIFactoryService().newText("", Color.WHITE, 30);
+        Text versionText = getUIFactoryService().newText("当前游戏版本 " + VERSION, Color.WHITE, 14);
+        Text groupText = getUIFactoryService().newText("企鹅群 207302647", Color.WHITE, 14);
+        groupText.setOnMouseClicked(_ -> {
+            try {
+                Desktop.getDesktop().browse(new URI("https://qm.qq.com/q/xF5cjEck2Q"));
+            } catch (Exception e) {
+                DialogUtil.show("打开链接失败");
+            }
+        });
+        groupText.setOnMouseEntered(_ -> groupText.setUnderline(true));
+        groupText.setOnMouseExited(_ -> groupText.setUnderline(false));
+
+        VBox textBox = new VBox(0, moneyText, nameText, versionText, groupText);
+        textBox.setTranslateX(10);
+        Platform.runLater(() -> textBox.setTranslateY(GameInfo.HEIGHT - textBox.getHeight() - 20));
+        FXGL.getGameScene().addUINode(textBox);
 
         InputUtil.addEnd(()-> {
             GameInfo.TCP_PORT = 2261;
@@ -93,11 +108,6 @@ public class MainMenuScene extends Scene {
             GameInfo.ADDRESS = "localhost";
             DialogUtil.show("已开启调试模式");
         }, KeyCode.F12, this.getClass().toString());
-
-        Text versionText = getUIFactoryService().newText("当前游戏版本：" + VERSION, Color.WHITE, 13);
-        versionText.setTranslateX(12);
-        versionText.setTranslateY(520);
-        FXGL.getGameScene().addUINode(versionText);
 
         JSONObject json = new JSONObject();
         json.put(JsonKey.TOKEN, Main.getSave().get(BundleKey.TOKEN));
