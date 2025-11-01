@@ -173,7 +173,6 @@ public class LoginScene extends Scene {
                                 getDialogService().showMessageBox(regRepJson.getString(JsonKey.MSG));
                             }
                         });
-
                     } else {
                         getDialogService().showMessageBox(json.getString(JsonKey.MSG));
                     }

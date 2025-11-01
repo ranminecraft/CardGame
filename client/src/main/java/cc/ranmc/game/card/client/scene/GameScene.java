@@ -214,6 +214,8 @@ public class GameScene extends Scene {
                 FXGL.runOnce(() -> chatText.setText(""), Duration.seconds(5));
             }
         } else if (message.getName().equals(BundleKey.PLAYERS)) {
+            lastX = 0;
+            lastY = 0;
             List<Integer> list = new ArrayList<>();
             JSONArray.parse(message.get(BundleKey.PLAYERS)).forEach(obj -> {
                 JSONObject json = (JSONObject) obj;
