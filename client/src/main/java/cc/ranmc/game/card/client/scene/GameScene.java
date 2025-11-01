@@ -70,7 +70,7 @@ public class GameScene extends Scene {
         Text statusText = new Text("FPS: 0 | Ping: 0ms");
         statusText.setFont(Font.font(16));
         statusText.setFill(Color.WHITE);
-        FXGL.addUINode(statusText, FXGL.getAppWidth() - 160, 20);
+        FXGL.addUINode(statusText, FXGL.getAppWidth() - 180, 20);
         statusText.setVisible(false);
         FXGL.getGameTimer().runAtInterval(() -> {
             statusText.setText("FPS: " + fps + " | Ping: " + latency + "ms");

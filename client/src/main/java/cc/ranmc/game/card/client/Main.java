@@ -41,6 +41,10 @@ public class Main extends GameApplication {
         settings.setFontMono(FONT);
         settings.setFontUI(FONT);
         settings.setFontText(FONT);
+        settings.setScaleAffectedOnResize(true);
+        settings.setPreserveResizeRatio(true);
+        settings.setManualResizeEnabled(true);
+
     }
 
     @Override

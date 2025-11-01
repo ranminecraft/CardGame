@@ -2,16 +2,19 @@ package cc.ranmc.game.card.client.scene;
 
 import cc.ranmc.game.card.client.Main;
 import cc.ranmc.game.card.client.util.ApiUtil;
+import cc.ranmc.game.card.client.util.HttpUtil;
+import cc.ranmc.game.card.client.util.InputUtil;
 import cc.ranmc.game.card.common.constant.BundleKey;
+import cc.ranmc.game.card.common.constant.GameInfo;
 import cc.ranmc.game.card.common.constant.HttpResponse;
 import cc.ranmc.game.card.common.constant.JsonKey;
-import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.scene.Scene;
 import com.almasb.fxgl.texture.Texture;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -73,6 +76,13 @@ public class MainMenuScene extends Scene {
             Main.changeScene(new LoginScene());
         });
 
+        InputUtil.add(()-> {
+            GameInfo.TCP_PORT = 2261;
+            GameInfo.HTTP_PORT = 2262;
+            GameInfo.ADDRESS = "localhost";
+            getDialogService().showMessageBox("已开启调试模式");
+        }, KeyCode.F12, this.getClass().toString());
+
         Text versionText = getUIFactoryService().newText("当前游戏版本：" + VERSION, Color.WHITE, 13);
         versionText.setTranslateX(12);
         versionText.setTranslateY(520);
@@ -80,24 +90,25 @@ public class MainMenuScene extends Scene {
 
         JSONObject json = new JSONObject();
         json.put(JsonKey.TOKEN, Main.getSave().get(BundleKey.TOKEN));
-        try {
-            String body = HttpUtil.post(ApiUtil.get(INFO_PATH), json.toString());
-            json = JSONObject.parseObject(body);
-            int code = json.getIntValue(JsonKey.CODE, 0);
+        HttpUtil.post(ApiUtil.get(INFO_PATH), json.toString(), body -> {
+            if (body.isEmpty()) {
+                getDialogService().showMessageBox("连接服务器失败");
+                return;
+            }
+            JSONObject bodyJson = JSONObject.parseObject(body);
+            int code = bodyJson.getIntValue(JsonKey.CODE, 0);
             if (code == HttpResponse.SC_OK) {
-                money = json.getIntValue(JsonKey.MONEY, 0);
-                name = json.getString(JsonKey.NAME);
+                money = bodyJson.getIntValue(JsonKey.MONEY, 0);
+                name = bodyJson.getString(JsonKey.NAME);
                 moneyText.setText("金币 " + money);
                 nameText.setText("来玩吧，" + name + "！");
             } else if (code == HttpResponse.SC_UNAUTHORIZED) {
                 getDialogService().showMessageBox("登陆已过期");
                 Main.changeScene(new LoginScene());
             } else {
-                getDialogService().showMessageBox(json.getString(JsonKey.MSG));
+                getDialogService().showMessageBox(bodyJson.getString(JsonKey.MSG));
             }
-        } catch (Exception e) {
-            getDialogService().showMessageBox("获取账号数据失败\n" + e.getMessage());
-        }
+        });
     }
 
 }
