@@ -118,30 +118,30 @@ public class LoginScene extends Scene {
                     }
                     JSONObject bodyJson = JSONObject.parseObject(body);
                     int code = bodyJson.getIntValue(JsonKey.CODE, 0);
-                    if (code == HttpResponse.SC_OK || code == HttpResponse.SC_UNAUTHORIZED) {
-                        getDialogService().showInputBox("请检查邮箱并输入验证码", key -> {
-                            JSONObject keyJson = new JSONObject();
-                            keyJson.put(JsonKey.KEY, key);
-                            HttpUtil.post(ApiUtil.get(REGISTER_PATH), keyJson.toString(), regRepBody -> {
-                                if (regRepBody.isEmpty()) {
-                                    getDialogService().showMessageBox("连接服务器失败");
-                                    return;
-                                }
-                                JSONObject regRepJson = JSONObject.parseObject(regRepBody);
-                                int regRepCode = regRepJson.getIntValue(JsonKey.CODE, 0);;
-                                if (regRepCode == HttpResponse.SC_OK) {
-                                    Main.getSave().put(BundleKey.TOKEN, regRepJson.getString(JsonKey.TOKEN));
-                                    Main.getSave().put(BundleKey.NAME, playerName);
-                                    FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
-                                    Main.changeScene(new MainMenuScene());
-                                } else {
-                                    getDialogService().showMessageBox(regRepJson.getString(JsonKey.MSG));
-                                }
-                            });
-                        });
-                    } else {
+                    if (code != HttpResponse.SC_OK && code != HttpResponse.SC_UNAUTHORIZED) {
                         getDialogService().showMessageBox(bodyJson.getString(JsonKey.MSG));
+                        return;
                     }
+                    getDialogService().showInputBox("请检查邮箱并输入验证码", key -> {
+                        JSONObject keyJson = new JSONObject();
+                        keyJson.put(JsonKey.KEY, key);
+                        HttpUtil.post(ApiUtil.get(REGISTER_PATH), keyJson.toString(), regRepBody -> {
+                            if (regRepBody.isEmpty()) {
+                                getDialogService().showMessageBox("连接服务器失败");
+                                return;
+                            }
+                            JSONObject regRepJson = JSONObject.parseObject(regRepBody);
+                            int regRepCode = regRepJson.getIntValue(JsonKey.CODE, 0);;
+                            if (regRepCode != HttpResponse.SC_OK) {
+                                getDialogService().showMessageBox(regRepJson.getString(JsonKey.MSG));
+                                return;
+                            }
+                            Main.getSave().put(BundleKey.TOKEN, regRepJson.getString(JsonKey.TOKEN));
+                            Main.getSave().put(BundleKey.NAME, playerName);
+                            FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
+                            Main.changeScene(new MainMenuScene());
+                        });
+                    });
                 });
             });
         });
@@ -164,26 +164,25 @@ public class LoginScene extends Scene {
                 HttpUtil.post(ApiUtil.get(PRE_FORGET_PATH), json.toString(), body -> {
                     JSONObject bodyJson = JSONObject.parseObject(body);
                     int code = bodyJson.getIntValue(JsonKey.CODE, 0);
-                    if (code == HttpResponse.SC_OK || code == HttpResponse.SC_UNAUTHORIZED) {
-                        getDialogService().showInputBox("请检查邮箱并输入验证码", key -> {
-                            JSONObject keyJson = new JSONObject();
-                            keyJson.put(JsonKey.KEY, key);
-                            HttpUtil.post(ApiUtil.get(FORGET_PATH), keyJson.toString(), regRepBody -> {
-                                JSONObject regRepJson = JSONObject.parseObject(regRepBody);
-                                int regRepCode = regRepJson.getIntValue(JsonKey.CODE, 0);;
-                                if (regRepCode == HttpResponse.SC_OK) {
-                                    Main.getSave().put(BundleKey.TOKEN, regRepJson.getString(JsonKey.TOKEN));
-                                    Main.getSave().put(BundleKey.NAME, playerName);
-                                    FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
-                                    Main.changeScene(new MainMenuScene());
-                                } else {
-                                    getDialogService().showMessageBox(regRepJson.getString(JsonKey.MSG));
-                                }
-                            });
-                        });
-                    } else {
+                    if (code != HttpResponse.SC_OK && code != HttpResponse.SC_UNAUTHORIZED) {
                         getDialogService().showMessageBox(bodyJson.getString(JsonKey.MSG));
+                        return;
                     }
+                    getDialogService().showInputBox("请检查邮箱并输入验证码", key -> {
+                        JSONObject keyJson = new JSONObject();
+                        keyJson.put(JsonKey.KEY, key);
+                        HttpUtil.post(ApiUtil.get(FORGET_PATH), keyJson.toString(), regRepBody -> {
+                            JSONObject regRepJson = JSONObject.parseObject(regRepBody);
+                            int regRepCode = regRepJson.getIntValue(JsonKey.CODE, 0);;
+                            if (regRepCode != HttpResponse.SC_OK) {
+                                getDialogService().showMessageBox(regRepJson.getString(JsonKey.MSG));
+                            }
+                            Main.getSave().put(BundleKey.TOKEN, regRepJson.getString(JsonKey.TOKEN));
+                            Main.getSave().put(BundleKey.NAME, playerName);
+                            FXGL.getSaveLoadService().saveAndWriteTask(SAVE_FILE_NAME).run();
+                            Main.changeScene(new MainMenuScene());
+                        });
+                    });
                 });
             });
         });

@@ -1,6 +1,7 @@
 package cc.ranmc.game.card.client.util;
 
 import com.almasb.fxgl.dsl.FXGL;
+import javafx.application.Platform;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -16,20 +17,21 @@ public class LoadingUtil {
     private static StackPane loadingPane;
 
     public static void start() {
-        if (loadingPane == null) {
-            loadingPane = new StackPane();
-            Rectangle bg = new Rectangle(WIDTH, HEIGHT, Color.rgb(0, 0, 0, 0.5));
-            Text text = new Text("加载中...");
-            text.setFill(Color.WHITE);
-            text.setFont(Font.font(24));
-            loadingPane.getChildren().addAll(bg, text);
-        }
-        FXGL.runOnce(() -> FXGL.getGameScene().addUINode(loadingPane), Duration.millis(1));
-
+        Platform.runLater(() -> {
+            if (loadingPane == null) {
+                loadingPane = new StackPane();
+                Rectangle bg = new Rectangle(WIDTH, HEIGHT, Color.rgb(0, 0, 0, 0.5));
+                Text text = new Text("加载中...");
+                text.setFill(Color.WHITE);
+                text.setFont(Font.font(24));
+                loadingPane.getChildren().addAll(bg, text);
+            }
+            FXGL.getGameScene().addUINode(loadingPane);
+        });
     }
 
     public static void end() {
-        FXGL.runOnce(() -> FXGL.getGameScene().removeUINode(loadingPane), Duration.millis(1));
+        Platform.runLater(() -> FXGL.getGameScene().removeUINode(loadingPane));
     }
 
 }

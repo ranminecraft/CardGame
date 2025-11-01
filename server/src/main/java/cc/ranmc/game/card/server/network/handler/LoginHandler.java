@@ -56,10 +56,6 @@ public class LoginHandler {
             return;
         }
 
-        try {
-            Thread.sleep(1500);
-        } catch (Exception ignored) {}
-
         Main.getData().update(SQLKey.PLAYER, new SQLFilter()
                 .set(SQLKey.LAST_LOGIN, System.currentTimeMillis())
                 .andSet(SQLKey.LAST_ADDRESS, context.ip())
