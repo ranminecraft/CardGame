@@ -81,7 +81,7 @@ public class GameScene extends Scene {
         }, Duration.seconds(1));
 
         FXGL.getGameTimer().runAtInterval(() -> {
-            if (clientConnection != null && !clientConnection.isConnected()) {
+            if (clientConnection != null && clientConnection.isConnected()) {
                 clientConnection.send(new Bundle(BundleKey.PING));
                 lastPingTime = System.currentTimeMillis();
             }
