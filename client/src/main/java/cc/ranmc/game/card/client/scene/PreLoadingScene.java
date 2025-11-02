@@ -7,6 +7,7 @@ import com.almasb.fxgl.scene.Scene;
 import com.almasb.fxgl.texture.Texture;
 import javafx.animation.FadeTransition;
 import javafx.scene.Cursor;
+import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
@@ -32,6 +33,7 @@ public class PreLoadingScene extends Scene {
         logo.setTranslateX(300);
         logo.setTranslateY(140);
         logo.setOpacity(0);
+        logo.setEffect(new Glow(0.2));
         FadeTransition fadeIn = new FadeTransition(Duration.millis(2000), logo);
         fadeIn.setToValue(1);
         fadeIn.play();
