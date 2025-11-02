@@ -73,9 +73,7 @@ public class DialogUtil {
 
             Button closeButton = new Button("确定");
             closeButton.getStyleClass().add("small-button");
-            closeButton.setOnAction(_ -> {
-                FXGL.getGameScene().removeUINode(dialogPane);
-            });
+            closeButton.setOnAction(_ -> FXGL.getGameScene().removeUINode(dialogPane));
 
             VBox vbox = new VBox(30, text, closeButton);
             vbox.setAlignment(Pos.CENTER);
