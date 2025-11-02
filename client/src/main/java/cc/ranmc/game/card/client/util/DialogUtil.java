@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 
 import static cc.ranmc.game.card.common.constant.GameInfo.HEIGHT;
 import static cc.ranmc.game.card.common.constant.GameInfo.WIDTH;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getUIFactoryService;
 
 public class DialogUtil {
 
@@ -29,13 +30,11 @@ public class DialogUtil {
 
             Rectangle bg = new Rectangle(WIDTH, HEIGHT, Color.rgb(0, 0, 0, 0.5));
 
-            Text text = new Text(message);
-            text.setFill(Color.WHITE);
-            text.setFont(Font.font(GameInfo.FONT, FontWeight.BOLD, 24));
+            Text text = getUIFactoryService().newText(message, Color.WHITE, 24);
             text.maxWidth(WIDTH);
 
             TextField textField = new TextField();
-            textField.setFont(Font.font(20));
+            textField.setFont(Font.font(GameInfo.FONT, FontWeight.BOLD, 20));
             textField.setMaxWidth(200);
 
             Texture background = FXGL.getAssetLoader().loadTexture("dialog.png");
@@ -48,7 +47,7 @@ public class DialogUtil {
                 textField.setText("");
             });
 
-            VBox vbox = new VBox(30, text, textField, closeButton);
+            VBox vbox = new VBox(20, text, textField, closeButton);
             vbox.setAlignment(Pos.CENTER);
 
             inputDialog.getChildren().addAll(bg, background, vbox);
@@ -63,9 +62,7 @@ public class DialogUtil {
 
             Rectangle bg = new Rectangle(WIDTH, HEIGHT, Color.rgb(0, 0, 0, 0.5));
 
-            Text text = new Text(message);
-            text.setFill(Color.WHITE);
-            text.setFont(Font.font(GameInfo.FONT, FontWeight.BOLD, 24));
+            Text text = getUIFactoryService().newText(message, Color.WHITE, 24);
             text.setWrappingWidth(WIDTH - 100);
             text.setTextAlignment(TextAlignment.CENTER);
 

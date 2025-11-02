@@ -17,7 +17,6 @@ import com.almasb.fxgl.scene.Scene;
 import com.almasb.fxgl.texture.Texture;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -30,6 +29,7 @@ import static cc.ranmc.game.card.common.constant.BundleKey.CHAT;
 import static cc.ranmc.game.card.common.constant.BundleKey.MOVE;
 import static cc.ranmc.game.card.common.constant.GameInfo.ADDRESS;
 import static cc.ranmc.game.card.common.constant.GameInfo.TCP_PORT;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getUIFactoryService;
 
 public class GameScene extends Scene {
 
@@ -65,19 +65,19 @@ public class GameScene extends Scene {
                 .zIndex(-1000)
                 .buildAndAttach();
 
-        helpText = new Text("请稍后，正在连接服务器中...");
-        helpText.setFont(Font.font(18));
+        helpText = getUIFactoryService().newText("请稍后，正在连接服务器中...", Color.BLACK, 18);
         FXGL.addUINode(helpText, 10, 20);
-
         connect();
 
-        Text statusText = new Text("FPS: 0 | Ping: 0ms");
-        statusText.setFont(Font.font(16));
-        statusText.setFill(Color.WHITE);
-        FXGL.addUINode(statusText, FXGL.getAppWidth() - 180, 20);
+        Text statusText = getUIFactoryService().newText("FPS: 0 丨 Ping: 0ms", Color.BLACK, 18);
+        FXGL.addUINode(statusText, 0, 20);
         statusText.setVisible(false);
+        statusText.layoutBoundsProperty().addListener((_, _, newVal) -> {
+            statusText.setTranslateX(GameInfo.WIDTH - newVal.getWidth() - 10);
+        });
+
         FXGL.getGameTimer().runAtInterval(() -> {
-            statusText.setText("FPS: " + fps + " | Ping: " + latency + "ms");
+            statusText.setText("FPS: " + fps + " 丨 Ping: " + latency + "ms");
         }, Duration.seconds(1));
 
         FXGL.getGameTimer().runAtInterval(() -> {
@@ -243,15 +243,11 @@ public class GameScene extends Scene {
                 int pid = json.getInteger(BundleKey.ID);
                 list.add(pid);
                 if (!playerMap.containsKey(pid)) {
-                    Text nameText = new Text(json.getString(BundleKey.PLAYER_NAME));
-                    nameText.setFill(Color.BLUE);
-                    nameText.setFont(Font.font(16));
+                    Text nameText = getUIFactoryService().newText(json.getString(BundleKey.PLAYER_NAME), Color.BLUE, 16);
                     nameText.setTranslateY(-10);
                     nameText.setTranslateX((double) player_width / 2 - nameText.getBoundsInLocal().getWidth() / 2);
-                    Text chatText = new Text();
-                    chatText.setFill(Color.GREEN);
-                    chatText.setFont(Font.font(18));
-                    chatText.setTranslateY(25);
+                    Text chatText = getUIFactoryService().newText("", Color.DARKGREEN, 18);
+                    chatText.setTranslateY((double) player_height / 1.5);
                     chatText.setTranslateX(player_width);
                     playerMap.put(pid,
                             FXGL.entityBuilder()

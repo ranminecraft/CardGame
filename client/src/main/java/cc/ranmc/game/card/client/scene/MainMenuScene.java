@@ -20,6 +20,8 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.awt.*;
@@ -56,6 +58,7 @@ public class MainMenuScene extends Scene {
 
         Button playBtn = new Button("开始游戏");
         playBtn.getStyleClass().add("play-button");
+        playBtn.setFont(Font.font(GameInfo.FONT));
         playBtn.setOnAction(_ -> Main.changeScene(new GameScene()));
         FXGL.getGameScene().addUINode(playBtn);
 

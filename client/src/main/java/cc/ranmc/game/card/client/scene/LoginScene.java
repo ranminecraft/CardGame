@@ -25,15 +25,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import static cc.ranmc.game.card.common.constant.GameInfo.NAME;
 import static cc.ranmc.game.card.common.constant.GameInfo.SAVE_FILE_NAME;
 import static cc.ranmc.game.card.common.constant.HttpPath.FORGET_PATH;
 import static cc.ranmc.game.card.common.constant.HttpPath.LOGIN_PATH;
 import static cc.ranmc.game.card.common.constant.HttpPath.PRE_FORGET_PATH;
 import static cc.ranmc.game.card.common.constant.HttpPath.PRE_REGISTER_PATH;
 import static cc.ranmc.game.card.common.constant.HttpPath.REGISTER_PATH;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getDialogService;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getUIFactoryService;
 
 public class LoginScene extends Scene {
 
@@ -49,10 +48,10 @@ public class LoginScene extends Scene {
 
         TextField playerNameField = new TextField();
         playerNameField.setPromptText("玩家名");
-        playerNameField.setFont(Font.font(15));
+        playerNameField.setFont(Font.font(GameInfo.FONT, FontWeight.BOLD, 15));
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("密码");
-        passwordField .setFont(Font.font(15));
+        passwordField .setFont(Font.font(GameInfo.FONT, FontWeight.BOLD, 15));
 
         // 按钮
         Button loginButton = new Button("登录");
@@ -62,9 +61,7 @@ public class LoginScene extends Scene {
         Button forgotButton = new Button("忘记密码");
         forgotButton.getStyleClass().add("small-button");
 
-        Text titleText = new Text(GameInfo.NAME);
-        titleText.setFill(Color.WHITE);
-        titleText.setFont(Font.font(GameInfo.FONT, FontWeight.BOLD, 45));
+        Text titleText = getUIFactoryService().newText(GameInfo.NAME, Color.WHITE, 45);
         DropShadow ds = new DropShadow();
         ds.setOffsetX(3);
         ds.setOffsetY(3);
