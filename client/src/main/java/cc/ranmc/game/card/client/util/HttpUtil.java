@@ -1,6 +1,5 @@
 package cc.ranmc.game.card.client.util;
 
-import com.almasb.fxgl.dsl.FXGL;
 import javafx.application.Platform;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -14,11 +13,12 @@ import java.util.function.Consumer;
 public class HttpUtil {
 
     private static final OkHttpClient client = new OkHttpClient();
+    private static final Duration TIMEOUT = Duration.ofSeconds(8);
 
     public static void get(String url, Consumer<String> callback) {
         LoadingUtil.start();
         new Thread(() -> {
-            OkHttpClient c = client.newBuilder().callTimeout(Duration.ofMillis(8000)).build();
+            OkHttpClient c = client.newBuilder().callTimeout(TIMEOUT).build();
             Request request = new Request.Builder().url(url).build();
             String result = "";
             try (Response response = c.newCall(request).execute()) {
@@ -35,7 +35,7 @@ public class HttpUtil {
     public static void post(String url, String body, Consumer<String> callback) {
         LoadingUtil.start();
         new Thread(() -> {
-            OkHttpClient c = client.newBuilder().callTimeout(Duration.ofMillis(8000)).build();
+            OkHttpClient c = client.newBuilder().callTimeout(TIMEOUT).build();
             RequestBody requestBody = RequestBody.create(body,
                     MediaType.parse("application/json; charset=utf-8"));
             Request request = new Request.Builder()
@@ -44,7 +44,7 @@ public class HttpUtil {
                     .build();
             String result = "";
             try (Response response = c.newCall(request).execute()) {
-                if (response.isSuccessful()) result = response.body().string();
+                result = response.body().string();
             } catch (Exception ignored) {}
             String finalResult = result;
             Platform.runLater(() -> {
