@@ -228,7 +228,6 @@ public class GameScene extends Scene {
             Main.changeScene(new MainMenuScene());
             DialogUtil.show(message.get(BundleKey.DISCONNECT));
         } else if (message.getName().equals(BundleKey.CHAT)) {
-            System.out.println(message);
             int pid = message.get(BundleKey.ID);
             if (playerMap.containsKey(pid)) {
                 Text chatText = (Text) playerMap.get(pid).getViewComponent().getChildren().get(2);

@@ -76,9 +76,9 @@ public class MainMenuScene extends Scene {
 
         VBox btnBox = new VBox(10, playBtn, fullscreenBtn, logoutBtn);
         btnBox.setAlignment(Pos.CENTER);
-        javafx.application.Platform.runLater(() -> {
-            btnBox.setTranslateX((GameInfo.WIDTH - btnBox.getWidth()) / 2);
-            btnBox.setTranslateY((GameInfo.HEIGHT - btnBox.getHeight()) / 2);
+        btnBox.layoutBoundsProperty().addListener((_, _, newVal) -> {
+            btnBox.setTranslateX((GameInfo.WIDTH - newVal.getWidth()) / 2);
+            btnBox.setTranslateY((GameInfo.HEIGHT - newVal.getHeight()) / 2);
         });
         FXGL.getGameScene().addUINode(btnBox);
 
@@ -98,7 +98,9 @@ public class MainMenuScene extends Scene {
 
         VBox textBox = new VBox(0, moneyText, nameText, versionText, groupText);
         textBox.setTranslateX(10);
-        Platform.runLater(() -> textBox.setTranslateY(GameInfo.HEIGHT - textBox.getHeight() - 20));
+        textBox.layoutBoundsProperty().addListener((_, _, newVal) -> {
+            textBox.setTranslateY(GameInfo.HEIGHT - newVal.getHeight() - 20);
+        });
         FXGL.getGameScene().addUINode(textBox);
 
         InputUtil.addEnd(()-> {

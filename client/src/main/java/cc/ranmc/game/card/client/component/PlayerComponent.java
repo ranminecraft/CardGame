@@ -26,7 +26,8 @@ public class PlayerComponent extends Component {
     private Double targetX;
     private Double targetY;
 
-    private String pic;
+    private final String pic;
+    private long lastSetDestination = 0;
 
     public PlayerComponent(String pic) {
         this.pic = pic;
@@ -51,6 +52,20 @@ public class PlayerComponent extends Component {
     public void onUpdate(double tpf) {
         if (moving) {
 
+            if (targetX != null && targetY != null) {
+                double dx = targetX - entity.getX();
+                double dy = targetY - entity.getY();
+                double distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 1 || distance > 100) {
+                    entity.setX(targetX);
+                    entity.setY(targetY);
+                } else {
+                    entity.translateX(dx / distance * 300 * tpf);
+                    entity.translateY(dy / distance * 300 * tpf);
+                }
+            }
+
             AnimationChannel currentAnim = switch (direction) {
                 case 1 -> leftAnim;
                 case 2 -> rightAnim;
@@ -60,21 +75,6 @@ public class PlayerComponent extends Component {
 
             if (texture.getAnimationChannel() != currentAnim) {
                 texture.loopAnimationChannel(currentAnim);
-            }
-
-            if (targetX != null && targetY != null) {
-                double dx = targetX - entity.getX();
-                double dy = targetY - entity.getY();
-                double distance = Math.sqrt(dx * dx + dy*dy);
-
-                if (distance < 1 || distance > 100) {
-                    entity.setX(targetX);
-                    entity.setY(targetY);
-                    moving = false;
-                } else {
-                    entity.translateX(dx / distance * 300 * tpf);
-                    entity.translateY(dy / distance * 300 * tpf);
-                }
             }
         } else {
             // 停止时显示当前方向第一帧（静止）
@@ -91,6 +91,12 @@ public class PlayerComponent extends Component {
         this.targetX = x;
         this.targetY = y;
         this.moving = true;
+        this.lastSetDestination = System.currentTimeMillis();
+        FXGL.runOnce(()-> {
+            if (this.lastSetDestination + 100 < System.currentTimeMillis()) {
+                this.moving = false;
+            }
+        },Duration.millis(400));
     }
 
     public void moveDown() {
