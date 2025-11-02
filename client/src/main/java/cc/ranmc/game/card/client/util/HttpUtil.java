@@ -44,7 +44,7 @@ public class HttpUtil {
                     .build();
             String result = "";
             try (Response response = c.newCall(request).execute()) {
-                result = response.body().string();
+                if (response.isSuccessful()) result = response.body().string();
             } catch (Exception ignored) {}
             String finalResult = result;
             Platform.runLater(() -> {
