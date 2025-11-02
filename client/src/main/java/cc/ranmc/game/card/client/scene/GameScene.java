@@ -255,11 +255,17 @@ public class GameScene extends Scene {
                     chatText.setTranslateX(player_width);
                     playerMap.put(pid,
                             FXGL.entityBuilder()
-                                    .at(150, 150)
+                                    .at((double) GameInfo.WIDTH / 2, (double) GameInfo.HEIGHT / 2)
                                     .with(new PlayerComponent(id == pid ? "p.png" : "p2.png"))
                                     .view(nameText)
                                     .view(chatText)
                                     .buildAndAttach());
+                    if (id == pid) {
+                        FXGL.getGameScene().getViewport().bindToEntity(playerMap.get(id), (double) FXGL.getAppWidth() / 2, (double) FXGL.getAppHeight() / 2);
+                        FXGL.getGameScene().getViewport().setBounds(-GameInfo.WIDTH / 2, -GameInfo.HEIGHT / 2,
+                                (int) (GameInfo.WIDTH * 1.5), (int) (GameInfo.HEIGHT * 1.5));
+                        FXGL.getGameScene().getViewport().setLazy(true);
+                    }
                 }
             });
             playerMap.keySet().removeIf(i -> {
