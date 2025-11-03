@@ -5,6 +5,7 @@ import cc.ranmc.game.card.client.component.PlayerComponent;
 import cc.ranmc.game.card.client.util.DialogUtil;
 import cc.ranmc.game.card.client.util.InputUtil;
 import cc.ranmc.game.card.common.constant.BundleKey;
+import cc.ranmc.game.card.common.constant.EntityType;
 import cc.ranmc.game.card.common.constant.GameInfo;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -255,6 +256,7 @@ public class GameScene extends Scene {
                                     .with(new PlayerComponent(id == pid ? "p.png" : "p2.png"))
                                     .view(nameText)
                                     .view(chatText)
+                                    .type(EntityType.PLAYER)
                                     .buildAndAttach());
                     if (id == pid) {
                         FXGL.getGameScene().getViewport().bindToEntity(playerMap.get(id), (double) FXGL.getAppWidth() / 2, (double) FXGL.getAppHeight() / 2);
