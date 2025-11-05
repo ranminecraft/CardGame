@@ -24,8 +24,12 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.getUIFactoryService;
 
 public class DialogUtil {
 
+    private static boolean show = false;
+
     public static void input(String message, Consumer<String> callback) {
+        if (show) return;
         Platform.runLater(() -> {
+            show = true;
             StackPane inputDialog = new StackPane();
 
             Rectangle bg = new Rectangle(WIDTH, HEIGHT, Color.rgb(0, 0, 0, 0.5));
@@ -45,6 +49,7 @@ public class DialogUtil {
                 FXGL.getGameScene().removeUINode(inputDialog);
                 callback.accept(textField.getText());
                 textField.setText("");
+                show = false;
             });
 
             VBox vbox = new VBox(20, text, textField, closeButton);
@@ -57,7 +62,9 @@ public class DialogUtil {
     }
 
     public static void show(String message) {
+        if (show) return;
         Platform.runLater(() -> {
+            show = true;
             StackPane dialogPane = new StackPane();
 
             Rectangle bg = new Rectangle(WIDTH, HEIGHT, Color.rgb(0, 0, 0, 0.5));
@@ -70,7 +77,10 @@ public class DialogUtil {
 
             Button closeButton = new Button("确定");
             closeButton.getStyleClass().add("small-button");
-            closeButton.setOnAction(_ -> FXGL.getGameScene().removeUINode(dialogPane));
+            closeButton.setOnAction(_ -> {
+                FXGL.getGameScene().removeUINode(dialogPane);
+                show = false;
+            });
 
             VBox vbox = new VBox(30, text, closeButton);
             vbox.setAlignment(Pos.CENTER);
